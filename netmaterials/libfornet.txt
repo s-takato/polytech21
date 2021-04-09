@@ -1,0 +1,60 @@
+// LIbrary for net materials
+// stinfo, queno,starttime , logdata はグローバル変数
+
+counttime():=(
+  regional(tmp,tmp1);
+  tmp=time();
+  tmp_1*3600+tmp_2*60+tmp_3;
+);
+
+Eachdata(dt):=(
+// dt=[no,ex,ca,ans,score,calctime]
+  regional(no,ex,ca,ans,score,tmp,out);
+  no="("+text(dt_1)+")";
+  ex=dt_2; 
+  if(isstring(dt_3),ca=dt_3,ca=text(dt_3));
+  if(isstring(dt_4),ans=dt_4,ans=text(dt_4));
+  if(isstring(dt_5),score=dt_5,score=text(dt_5));
+  tmp=text(dt_6);
+  out=no+";"+ex+";"+ca+";"+ans+";"+score+";"+tmp+":";
+  out;
+);
+
+Getcurtime():=Getcurtime(date(),time());
+Getcurtime(ymd,hms):=(
+  regional(out,tmp,tmp1);
+  out=text(ymd_1*10000+ymd_2*100+ymd_3);
+  tmp=text(hms_1*3600+hms_2*60+hms_3);
+  tmp1=substring("0000000",0,5-length(tmp));
+  out=out+tmp1+tmp;
+  out;
+);
+
+Returntime(data):=(
+  regional(tmp,tmp1,out);
+  tmp=substring(data,8,length(data));
+  tmp=parse(tmp);
+  out=[floor(tmp/3600)];
+  tmp=mod(tmp,3600);
+  out=append(out,floor(tmp/60));
+  tmp=mod(tmp,60);
+  out=append(out,tmp);
+  out;  
+);
+
+Getstudyinfo():=(
+  regional(st,out);
+  st=Textedit(51,"",":");
+  if(st=="",st="noname");
+  out=st+","+Getcurtime()+";";
+  logdata=out;
+  out;
+);
+
+stinfo="";
+startime=0;
+logdata="";
+queflg=0;
+queno=0;
+scoreflg=0;
+recordflg=0;
