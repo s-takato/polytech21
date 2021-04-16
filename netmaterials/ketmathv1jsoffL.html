@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     
-    <title>003ketmathv1.cdy</title>
+    <title>ketmathv1.cdy</title>
     <style type="text/css">
         * {
             margin: 0px;
@@ -114,37 +114,6 @@ Ketinit(work,strictsep):=( //200509
   CRmark=unicode("000d");//16.12.13
   Dq=unicode("0022");
   Fillstore(); //181212
-  Namecdy=Cindyname();//180608
-  tmp1=Indexall(Dircdy,"%"); //180329from
-  if(length(tmp1)>0,
-    tmp1=append(tmp1,length(Dircdy));
-    tmp2=substring(Dircdy,0,tmp1_1-1);
-    forall(1..(length(tmp1)-1),
-      tmp=substring(Dircdy,tmp1_#,tmp1_#+2);
-      tmp2=tmp2+unicode(tmp);
-      tmp2=tmp2+substring(Dircdy,tmp1_#+2,tmp1_(#+1)-1);
-    );
-    Dircdy=tmp2;
-  ); //180329to
-  if(iswindows(),  //17.12.01
-    Dircdy=replace(Dircdy,"/",pathsep());
-    if(substring(Dircdy,0,1)==pathsep(),
-      Dircdy=substring(Dircdy,1,length(Dircdy));
-    );
-  );
-  Userhome=Homehead+pathsep()+getname(); //190128
-  if(iswindows(),
-    Batparent="\kc.bat";
-  ,
-    if(ismacosx(), //181125from
-      Shellparent="/kc.command"; 
-      Mackc="open"; //190222
-    ,
-      Shellparent="/kc.sh"; 
-      Mackc="bash"; //190222
-    );  //181125to
-  );
-  Changework(Dircdy+pathsep()+work); //180329to,181001
   Fnametex=Fhead+".tex";
   FnameR=Fhead+".r";
   FnamebodyR=Fhead+"body.r";
@@ -1011,7 +980,10 @@ Enclosing2(nm,plistorg,options):=(
           KL=sort(KL,[#_2]);//180706
           tmp=parse(Fdata);
           tmp1=t1+Eps;
-          KL=select(KL,(#_2>tmp1)%((#_2>t1)&(|#_1-p1|>Eps1))); //180713,16
+          tmp=select(KL,(#_2>tmp1)%((#_2>t1)&(|#_1-p1|>Eps1))); //210411from
+          if(length(tmp)>0,
+            KL=tmp;
+          ); //210411to
           t2=KL_1_2;
           ss=KL_1_3;
           if(abs(t2-t1)<Eps,//180707
@@ -2780,9 +2752,9 @@ Ketcindyjsscale=1;
 Modifyfortex(str):=(
   regional(rep1L,rep2L,nn,tmp,tmp1,out);
   rep1L=["(sp)","(cross)","(cdot)","^(circ)","(neq)",
-         "(geq)","(leq)"];
+         "(geq)","(leq)","(pm)","(mp)"];
   rep2L=["\;","\times ","\cdot ","^{\circ}","\neq ",
-         "\geq ","\leq "];
+         "\geq ","\leq ","\pm ","\mp "];
   out=str;
   forall(1..(length(rep1L)),nn,
     out=replace(out,rep1L_nn,rep2L_nn);
@@ -3211,7 +3183,7 @@ var cdy = CindyJS({
     {name: "Text53", type: "Button", pos: [4.0, -1.5350039293414404, 0.2142756126830642], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 0.0], fillalpha: 1.0, text_fontfamily: "monospace", script: "funflg=1;\nname=\"(\";\n", text: "（", textsize: 30.0},
     {name: "Text82", type: "Button", pos: [4.0, -1.2410531982891853, 0.1732421848260557], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 0.0], fillalpha: 1.0, text_fontfamily: "monospace", script: "funflg=1;\nname=\"(cross)\";\n", text: "ｘ", textsize: 30.0, textbold: true},
     {name: "Text52", type: "Button", pos: [4.0, -2.055461444555897, 0.2117114866246507], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 0.0], fillalpha: 1.0, text_fontfamily: "monospace", script: "funflg=1;\nname=\"^(\";\n", text: "＾", textsize: 30.0, textbold: true},
-    {name: "Text83", type: "Button", pos: [4.0, -1.6908896257349786, 0.1400590538874167], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 0.0], fillalpha: 1.0, text_fontfamily: "monospace", script: "funflg=1;\nname=\"(neq)\";", text: "⧧", textsize: 30.0},
+    {name: "Text83", type: "Button", pos: [4.0, -1.7050505050505051, 0.14047482594672878], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 0.0], fillalpha: 1.0, text_fontfamily: "monospace", script: "funflg=1;\nname=\"(neq)\";", text: "⧧", textsize: 30.0},
     {name: "Text74", type: "Button", pos: [4.0, 1.278156920106837, -0.2804412942159928], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 0.0], fillalpha: 1.0, text_fontfamily: "monospace", script: "funflg=1;\nname=\"}\";", text: "}", textsize: 30.0},
     {name: "Text73", type: "Button", pos: [4.0, 1.152798853480444, -0.2557932864176812], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 0.0], fillalpha: 1.0, text_fontfamily: "monospace", script: "funflg=1;\nname=\"{\";", text: "{", textsize: 30.0},
     {name: "Text79", type: "Button", pos: [4.0, 1.578155523842901, -0.22060574006413378], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 0.0], fillalpha: 1.0, text_fontfamily: "monospace", script: "funflg=1;\nname=\"(C)\";\ncapflg=1;\n", text: "Ca", textsize: 30.0},
@@ -3225,20 +3197,22 @@ var cdy = CindyJS({
     {name: "Text4", type: "Button", pos: [4.0, -3.1479326373483634, -0.29472651331606486], color: [0.0, 0.0, 0.0], fillcolor: [0.98, 1.0, 0.62], fillalpha: 0.9914529914529915, text_fontfamily: "monospace", script: "chno=1;\ninitpos=1;", text: "1", textsize: 20.0},
     {name: "Text20", type: "Button", pos: [0.9620353343422458, -4.0, 0.4126308816691039], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 0.0], fillalpha: 1.0, text_fontfamily: "monospace", script: "funflg=1;\nname=\"La\";", text: "ａ", textsize: 30.0},
     {name: "Text64", type: "Button", pos: [4.0, 0.1219698710331973, 0.13046926999734523], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 0.0, 0.0], fillalpha: 0.27272728085517883, text_fontfamily: "monospace", script: "npos=max([0,npos-1]);\ninitpos=0;", text: "＜", textsize: 24.0, textbold: true},
-    {name: "Text65", type: "Button", pos: [4.0, 0.11459239773446754, 0.11542941447895932], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 0.0, 0.0], fillalpha: 0.27272728085517883, text_fontfamily: "monospace", script: "tmp=length(StrL_chno);\nnpos=min([tmp,npos+1]);\ninitpos=0;", text: "＞", textsize: 24.0}
+    {name: "Text65", type: "Button", pos: [4.0, 0.11459239773446754, 0.11542941447895932], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 0.0, 0.0], fillalpha: 0.27272728085517883, text_fontfamily: "monospace", script: "tmp=length(StrL_chno);\nnpos=min([tmp,npos+1]);\ninitpos=0;", text: "＞", textsize: 24.0},
+    {name: "Text94", type: "Button", pos: [4.0, -0.9172517267906823, 0.13247022958648216], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 0.0], fillalpha: 1.0, text_fontfamily: "monospace", script: "funflg=1;\nname=\"(pm)\";", text: "±", textsize: 24.0},
+    {name: "Text95", type: "Button", pos: [4.0, -1.2616519763526348, 0.13222103745582314], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 0.0], fillalpha: 1.0, text_fontfamily: "monospace", script: "funflg=1;\nname=\"(mp)\";", text: "∓", textsize: 24.0}
   ],
   ports: [{
     id: "CSCanvas",
-    width: 1112,
-    height: 532,
-    transform: [{visibleRect: [-23.729044053753864, 13.892276700561352, 40.23870621963837, -16.710999509370904]}],
+    width: 1103,
+    height: 514,
+    transform: [{visibleRect: [-23.554407523996687, 13.47740835497766, 39.21542613054931, -15.773447944602252]}],
     axes: true,
     grid: 1.0,
     background: "rgb(247,247,247)"
   }],
   csconsole: false,
   use: ["katex"],
-  cinderella: {build: 2004, version: [3, 0, 2004]}
+  cinderella: {build: 2006, version: [3, 0, 2006]}
 });
     </script>
 </head>
