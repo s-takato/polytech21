@@ -1,4 +1,4 @@
-// LIbrary for net materials
+// LIbrary for net materials   20200417
 // stinfo, queno,starttime , logdata はグローバル変数
 
 counttime():=(
@@ -10,13 +10,13 @@ counttime():=(
 Eachdata(dt):=(
 // dt=[no,ex,ca,ans,score,calctime]
   regional(no,ex,ca,ans,score,tmp,out);
-  no="("+text(dt_1)+")";
+  no=text(dt_1);
   ex=dt_2; 
   if(isstring(dt_3),ca=dt_3,ca=text(dt_3));
   if(isstring(dt_4),ans=dt_4,ans=text(dt_4));
   if(isstring(dt_5),score=dt_5,score=text(dt_5));
   tmp=text(dt_6);
-  out=no+";"+ex+";"+ca+";"+ans+";"+score+";"+tmp+":";
+  out=no+";;"+ex+";;"+ca+";;"+ans+";;"+score+";;"+tmp;
   out;
 );
 
@@ -44,9 +44,8 @@ Returntime(data):=(
 
 Getstudyinfo():=(
   regional(st,out);
-  st=Textedit(51,"",":");
-  if(st=="",st="noname");
-  out=st+","+Getcurtime()+";";
+  st=Textedit(51,"noname");
+  out=st+";;"+Getcurtime();
   logdata=out;
   out;
 );
