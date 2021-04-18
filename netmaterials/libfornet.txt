@@ -1,24 +1,23 @@
-// LIbrary for net materials   20200417
-// stinfo, queno,starttime , logdata はグローバル変数
+// LIbrary for net materials   20200418
+// StarTtime , LogData, QuestionData, QuestionNo, NewQues はグローバル変数
 
-counttime():=(
-  regional(tmp,tmp1);
-  tmp=time();
-  tmp_1*3600+tmp_2*60+tmp_3;
-);
+// Startlearning(studentname) stnameと開始の年月日時刻データを追加した文字列を返す
+//       stname==""のときは，"noname"を返す
+// Startquestion(question,correct) 問題番号(+1)と問題と正解からQuestionDataを新たに作成, NewQues=0
+// Endquestion(studentans,studentscore) QuestionDataに解答得点解答時間を追加, NewQues=1
+// Updatelog() QuestionNoが同じ場合はLogDataを更新，そうでなければ追加
+// Log2csv(dt) logdataをCSVのリストにして返す
 
-Eachdata(dt):=(
-// dt=[no,ex,ca,ans,score,calctime]
-  regional(no,ex,ca,ans,score,tmp,out);
-  no=text(dt_1);
-  ex=dt_2; 
-  if(isstring(dt_3),ca=dt_3,ca=text(dt_3));
-  if(isstring(dt_4),ans=dt_4,ans=text(dt_4));
-  if(isstring(dt_5),score=dt_5,score=text(dt_5));
-  tmp=text(dt_6);
-  out=no+";;"+ex+";;"+ca+";;"+ans+";;"+score+";;"+tmp;
-  out;
-);
+// Getcurtime() 現在の年月日と時刻データを返す
+// Counttime() 現在の時刻データを返す
+// Returntime(data) dataから時刻の通常データを返す
+// Returndatetime(data) dataから年月日と時刻の通常データのリストを返す
+
+LogData="";
+StartTime=0;
+QuestionData="";
+QuestionNo=0;
+NewQues=1;
 
 Getcurtime():=Getcurtime(date(),time());
 Getcurtime(ymd,hms):=(
@@ -30,30 +29,116 @@ Getcurtime(ymd,hms):=(
   out;
 );
 
-Returntime(data):=(
+Counttime():=(
+  regional(tmp,tmp1);
+  tmp=time();
+  tmp_1*3600+tmp_2*60+tmp_3;
+);
+
+Returndatetime(data):=(
+  regional(dstr,dt,tm,tmp);
+  dstr=text(data);
+  dt=substring(dstr,0,8);
+  tmp=substring(dstr,8,length(dstr));
+  tm=Returntime(tmp);
+  [dt,tm];
+);
+
+Returntime(timedata):=(
   regional(tmp,tmp1,out);
-  tmp=substring(data,8,length(data));
-  tmp=parse(tmp);
+  tmp=timedata;
+  if(isstring(tmp),tmp=parse(tmp));
   out=[floor(tmp/3600)];
   tmp=mod(tmp,3600);
   out=append(out,floor(tmp/60));
   tmp=mod(tmp,60);
-  out=append(out,tmp);
-  out;  
-);
-
-Getstudyinfo():=(
-  regional(st,out);
-  st=Textedit(51,"noname");
-  out=st+";;"+Getcurtime();
-  logdata=out;
+  tmp1=append(out,tmp);
+  out="";
+  forall(tmp1,
+    out=out+text(#)+":";
+  );
+  out=substring(out,0,length(out)-1);
   out;
 );
 
-stinfo="";
-startime=0;
-logdata="";
-queflg=0;
-queno=0;
-scoreflg=0;
-recordflg=0;
+Startlearning(studentname):=(
+  regional(st);
+  //global LogData, QuestionNo, QuestionData
+  st=studentname;
+  if(length(st)==0,st="noname");
+  LogData=st+";;"+Getcurtime();
+  QuestionNo=0;
+  QuestionData=""
+);
+
+Startquestion(question,correct):=(
+  regional(no,ex,ca);
+  //global QuestionNo,QuestionData,Starttime
+  if(NewQues==1,
+    StartTime=Counttime();
+    QuestionNo=QuestionNo+1;
+    no=text(QuestionNo);
+    ex=question;
+    if(!isstring(ex),ex=text(ex));
+    ca=correct;
+  i  f(!isstring(ca),ca=text(ex));
+    QuestionData=no+";;"+ex+";;"+ca;
+  );
+  NewQues=0;
+);
+
+Endquestion(studentans,studentscore):=(
+  regional(ans,score,tm);
+  // global QuestionData,StartTime, EndQues
+  if(NewQues==0,
+    ans=studentans;
+    if(!isstring(ans),ans=text(ans));
+    score=studentscore;
+    if(!isstring(score),score=text(score));
+    QuestionData=QuestionData+";;"+ans+";;"+score;
+    tm=Counttime()-StartTime;
+    QuestionData=QuestionData+";;"+text(tm);
+  );
+  NewQues=1;
+);
+
+Updatelog():=(
+  regional(tmp,tmp1,tmp2);
+  //global LogData,QuestionData
+  tmp=tokenize(LogData,"||");
+  if(length(tmp)>1,
+    tmp1=tmp_(-1);
+    tmp2=tmp_(1..(length(tmp)-1));
+    tmp=tokenize(tmp1,";;");
+    tmp=tmp_1;
+    if(tmp==QuestionNo,
+      LogData=tmp2_1;
+      forall(2..(length(tmp2)),
+        LogData=LogData+"||"+tmp2_#;
+      );
+    );
+  );
+  LogData=LogData+"||"+QuestionData;
+);
+
+Log2csv(dt):=(
+  regional(cL,dL,out,nn,tmp,tmp1,tmp2);
+  cL=[];
+  dL=tokenize(dt,"||");
+  tmp=dL_1;
+  tmp1=tokenize(tmp,";;");
+  tmp=Returndatetime(tmp1_2);
+  out=[[tmp1_1+","+tmp_1+","+tmp_2]];
+  forall(2..(length(dL)),nn,
+    tmp1=tokenize(dL_nn,";;");
+    tmp2=text(tmp1_1)+",";
+    forall(2..(length(tmp1)),
+      tmp=tmp1_#;
+      if(!isstring(tmp),tmp=text(tmp));
+      tmp2=tmp2+Dqq(tmp);
+      if(#<length(tmp1),tmp2=tmp2+",");
+    );
+    out=append(out,tmp2);
+  );
+  out;
+);
