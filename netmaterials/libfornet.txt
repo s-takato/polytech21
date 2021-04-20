@@ -1,11 +1,11 @@
-// LIbrary for net materials   20200418
-// StarTtime , LogData, QuestionData, QuestionNo, NewQues はグローバル変数
+// LIbrary for net materials   20200420
+// StartTime, LogData, QuesData, QuestNo, NewLearn, NewQues, EndQues はグローバル変数
 
 // Startlearning(studentname) stnameと開始の年月日時刻データを追加した文字列を返す
 //       stname==""のときは，"noname"を返す
-// Startquestion(question,correct) 問題番号(+1)と問題と正解からQuestionDataを新たに作成, NewQues=0
-// Endquestion(studentans,studentscore) QuestionDataに解答得点解答時間を追加, NewQues=1
-// Updatelog() QuestionNoが同じ場合はLogDataを更新，そうでなければ追加
+// Startquestion(question,correct) 問題番号と問題と正解からQuesDataを新たに作成, NewQues=0
+// Endquestion(studentans,studentscore) QuesDataに解答得点解答時間を追加, NewQues=1,,QuesNo=+1
+// Updatelog() QuesNoが同じ場合はLogDataを更新，そうでなければ追加
 // Log2csv(dt) logdataをCSVのリストにして返す
 
 // Getcurtime() 現在の年月日と時刻データを返す
@@ -15,9 +15,11 @@
 
 LogData="";
 StartTime=0;
-QuestionData="";
-QuestionNo=0;
+QuesData="";
+QuesNo=0;
+NewLearn=1;
 NewQues=1;
+EndQues=0;
 
 Getcurtime():=Getcurtime(date(),time());
 Getcurtime(ymd,hms):=(
@@ -63,62 +65,58 @@ Returntime(timedata):=(
 
 Startlearning(studentname):=(
   regional(st);
-  //global LogData, QuestionNo, QuestionData
+  //global LogData, QuesNo, QuesData
   st=studentname;
   if(length(st)==0,st="noname");
   LogData=st+";;"+Getcurtime();
-  QuestionNo=0;
-  QuestionData=""
 );
 
 Startquestion(question,correct):=(
   regional(no,ex,ca);
-  //global QuestionNo,QuestionData,Starttime
-  if(NewQues==1,
-    StartTime=Counttime();
-    QuestionNo=QuestionNo+1;
-    no=text(QuestionNo);
-    ex=question;
-    if(!isstring(ex),ex=text(ex));
-    ca=correct;
-  i  f(!isstring(ca),ca=text(ex));
-    QuestionData=no+";;"+ex+";;"+ca;
-  );
-  NewQues=0;
+  StartTime=Counttime();
+  no=text(QuesNo);
+  ex=question;
+  if(!isstring(ex),ex=text(ex));
+  ca=correct;
+  if(!isstring(ca),ca=text(ex));
+  QuesData=no+";;"+ex+";;"+ca;
 );
 
 Endquestion(studentans,studentscore):=(
   regional(ans,score,tm);
-  // global QuestionData,StartTime, EndQues
-  if(NewQues==0,
+  // global QuesData,StartTime, EndQues
+  if(EndQues==0,
     ans=studentans;
     if(!isstring(ans),ans=text(ans));
     score=studentscore;
     if(!isstring(score),score=text(score));
-    QuestionData=QuestionData+";;"+ans+";;"+score;
+    QuesData=QuesData+";;"+ans+";;"+score;
     tm=Counttime()-StartTime;
-    QuestionData=QuestionData+";;"+text(tm);
+    QuesData=QuesData+";;"+text(tm);
+    EndQues=1;
   );
-  NewQues=1;
 );
 
 Updatelog():=(
   regional(tmp,tmp1,tmp2);
-  //global LogData,QuestionData
-  tmp=tokenize(LogData,"||");
-  if(length(tmp)>1,
-    tmp1=tmp_(-1);
-    tmp2=tmp_(1..(length(tmp)-1));
-    tmp=tokenize(tmp1,";;");
-    tmp=tmp_1;
-    if(tmp==QuestionNo,
-      LogData=tmp2_1;
-      forall(2..(length(tmp2)),
-        LogData=LogData+"||"+tmp2_#;
+  //global LogData,QuesData
+  if(length(QuesData)>0,
+    tmp=tokenize(LogData,"||");
+    if(length(tmp)>1,
+      tmp1=tmp_(-1);
+      tmp2=tmp_(1..(length(tmp)-1));
+      tmp=tokenize(tmp1,";;");
+      tmp=tmp_1;
+      if(tmp==QuesNo-1,
+        LogData=tmp2_1;
+        forall(2..(length(tmp2)),
+          LogData=LogData+"||"+tmp2_#;
+        );
       );
     );
+    LogData=LogData+"||"+QuesData;
   );
-  LogData=LogData+"||"+QuestionData;
+  QuesData="";
 );
 
 Log2csv(dt):=(
@@ -128,7 +126,7 @@ Log2csv(dt):=(
   tmp=dL_1;
   tmp1=tokenize(tmp,";;");
   tmp=Returndatetime(tmp1_2);
-  out=[[tmp1_1+","+tmp_1+","+tmp_2]];
+  out=tmp1_1+","+tmp_1+","+tmp_2;
   forall(2..(length(dL)),nn,
     tmp1=tokenize(dL_nn,";;");
     tmp2=text(tmp1_1)+",";
@@ -138,7 +136,7 @@ Log2csv(dt):=(
       tmp2=tmp2+Dqq(tmp);
       if(#<length(tmp1),tmp2=tmp2+",");
     );
-    out=append(out,tmp2);
+    out=out+","+tmp2;
   );
   out;
 );

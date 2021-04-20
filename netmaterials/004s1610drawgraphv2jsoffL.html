@@ -113,7 +113,6 @@ Ketinit(work,strictsep):=( //200509
   LFmark=unicode("000a"); Bs=unicode("005c");
   CRmark=unicode("000d");//16.12.13
   Dq=unicode("0022");
-  Fillstore(); //181212
   Fnametex=Fhead+".tex";
   FnameR=Fhead+".r";
   FnamebodyR=Fhead+"body.r";
@@ -3383,9 +3382,9 @@ if(length(texall)>0,
     tmp1=substring(texall,0,tmp);
     tmp2=substring(texall,tmp,length(texall)-1);
   );
-  drawtext([12,4],"$y=\displaystyle "+tmp1+"$",size->18);
+  drawtext([12,3.5],"$y=\displaystyle "+tmp1+"$",size->18);
   if(length(tmp2)>0,
-    drawtext([12,2.5],"$y=\displaystyle "+tmp2+"$",size->18);
+    drawtext([12,2],"$y=\displaystyle "+tmp2+"$",size->18);
   );
 );
 
@@ -3460,14 +3459,14 @@ var cdy = CindyJS({
   ports: [{
     id: "CSCanvas",
     width: 1005,
-    height: 506,
-    transform: [{visibleRect: [-14.92716109269077, 12.020988136591683, 38.176544741483475, -14.715803059519928]}],
+    height: 495,
+    transform: [{visibleRect: [-14.92716109269077, 12.020988136591683, 38.176544741483475, -14.13456846830011]}],
     grid: 1,
     background: "rgb(247,247,247)"
   }],
   csconsole: false,
   use: ["katex"],
-  cinderella: {build: 2004, version: [3, 0, 2004]}
+  cinderella: {build: 2006, version: [3, 0, 2006]}
 });
     </script>
 </head>
