@@ -133,7 +133,8 @@ Log2csv(dt):=(
     forall(2..(length(tmp1)),
       tmp=tmp1_#;
       if(!isstring(tmp),tmp=text(tmp));
-      tmp2=tmp2+Dqq(tmp);
+      if(indexof(tmp,",")>0,tmp=Dqq(tmp));
+      tmp2=tmp2+tmp;
       if(#<length(tmp1),tmp2=tmp2+",");
     );
     out=out+","+tmp2;
