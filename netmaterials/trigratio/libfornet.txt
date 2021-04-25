@@ -1,4 +1,4 @@
-// LIbrary for net materials   20200420
+// LIbrary for net materials   20200425
 // StartTime, LogData, QuesData, QuestNo, NewLearn, NewQues, EndQues はグローバル変数
 
 // Startlearning(studentname) stnameと開始の年月日時刻データを追加した文字列を返す
@@ -69,17 +69,21 @@ Startlearning(studentname):=(
   st=studentname;
   if(length(st)==0,st="noname");
   LogData=st+";;"+Getcurtime();
+  EndQues=1;  //210424
+  NewLearn=0; //210424
 );
 
 Startquestion(question,correct):=(
   regional(no,ex,ca);
   StartTime=Counttime();
+  QuesNo=QuesNo+1; //210424
   no=text(QuesNo);
   ex=question;
   if(!isstring(ex),ex=text(ex));
   ca=correct;
   if(!isstring(ca),ca=text(ex));
   QuesData=no+";;"+ex+";;"+ca;
+  EndQues=0;  //210424
 );
 
 Endquestion(studentans,studentscore):=(
@@ -107,7 +111,7 @@ Updatelog():=(
       tmp2=tmp_(1..(length(tmp)-1));
       tmp=tokenize(tmp1,";;");
       tmp=tmp_1;
-      if(tmp==QuesNo-1,
+      if(tmp==QuesNo, //210425å
         LogData=tmp2_1;
         forall(2..(length(tmp2)),
           LogData=LogData+"||"+tmp2_#;

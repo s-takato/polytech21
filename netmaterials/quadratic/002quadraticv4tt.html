@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    
+    <title>002quadraticv4tt.cdy</title>
+    <style type="text/css">
+        * {
+            margin: 0px;
+            padding: 0px;
+        }
+
+        #CSConsole {
+            background-color: #FAFAFA;
+            border-top: 1px solid #333333;
+            bottom: 0px;
+            height: 200px;
+            overflow-y: scroll;
+            position: fixed;
+            width: 100%;
+        }
+    </style>
+    <link rel="stylesheet" href="https://cindyjs.org/dist/v0.8/CindyJS.css">
+    <script type="text/javascript" src="https://cindyjs.org/dist/v0.8/Cindy.js"></script>
+    <script type="text/javascript" src="https://cindyjs.org/dist/v0.8/KetCindyPlugin.js"></script>
+<script id="csinit" type="text/x-cindyscript">
+use("KetCindyPlugin");
+Dircdy=loaddirectory;
+setdirectory(gethome());
+import("ketcindy.ini");
+
+setdirectory(Dircdy);
+import("libfornet.txt");
+import("libforpolytech21.txt");
+
+////Setting elements
+Seteditable(51,["ID=","Size=20","Width=150"]);// no ketjs on
+Seteditable(59,["","Size=16","Width=700"]);
+Seteditable(11,["","Size=18","Width=55"]);
+Seteditable(12,["","Size=18","Width=55"]);
+inspect(Text13,"colorfill",0);
+inspect(Text14,"colorfill",0);
+inspect(Text15,"colorfill",0);
+inspect(Text16,"colorfill",0);
+inspect(P1,"ptsize",6);
+inspect(P2,"ptsize",6);
+inspect(T,"ptsize",6);
+inspect(P3,"ptsize",6);
+inspect(P4,"ptsize",6);// no ketjs off
+
+////Display letters
+Displetters():=(
+  regional(ds);
+  ds=3.8;
+  Drwletter([-9,1.6],"頂点の座標は",20);
+  Drwletter([-9,0.8],"(",20);
+  Drwletter([-9+ds,0.8],")",20);
+  Drwletter([-9+ds/2,0.8],",",20);
+);
+
+Makequestion():=(
+  regional(ex,ca,a1,p1,q1,b1,c1,
+      flg,ctr,frm,cfrm,tmp);
+  a1=0;
+  frm="";
+  a1=randominteger(2)+1;
+  a1=2*a1-3;
+  if(QuesNo<=2,a1=1);
+  if(QuesNo==3,a1=-1);
+  flg=0;
+  ctr=1;
+  while((flg==0)&(ctr<40),
+    p1=randominteger(7)-3;
+    q1=randominteger(11)-5;
+    b1=-2*a1*p1;
+    c1=a1*p1*p1+q1;
+    frm=Assign("a*x^2+b*x+c",
+        ["a",text(a1),"b",text(b1),"c",text(c1)]);
+    tmp=Assign("a*x^2+b*x+c",
+        ["a",a1,"b",b1,"c",c1]);
+    cfrm=Tocindyform(tmp);
+    f(x):=[x,parse(cfrm)];
+    flg=1;
+    forall([p1-2,p1-1,p1,p1+1,p1+2],
+      if(!Inwindow(f(#)),flg=0);
+    );
+    ctr=ctr+1;
+  );
+  ex=Assign("a*(x-p)^2+q",["a",a1,"p",p1,"q",q1]);
+  tmp=Assign("[p,q]",["p",p1,"q",q1]);
+  ca=text(parse(tmp));
+  Subsedit(11,"");
+  Subsedit(12,"");
+  Putpoint("P1",[-2,-5.3]);
+  Putpoint("P2",[-1,-5.3]);
+  Putpoint("T",[0,-5.3]);
+  Putpoint("P3",[1,-5.3]);
+  Putpoint("P4",[2,-5.3]);
+  score1=""; score2="";
+  [ex,ca,a1,p1,q1,b1,c1,frm,cfrm];
+);
+
+Deformtex(frm):=(
+  regional(tmp,tfrm);
+  tmp=replace(frm,"1*","");
+  tmp=replace(tmp,"-1*","-");
+  tmp=replace(tmp,"+-","-");
+  tmp=replace(tmp,"+0*x","");
+  tmp=replace(tmp,"+0","");
+  tfrm=Totexform(tmp);
+  tfrm;
+);
+
+Scoring():=(
+  regional(eps,str1,str2,ans,pP,score,
+     tfrmpq,tmp,tmp1);
+  //global score1,p1,q1
+  eps=10^(-3);
+  str1=Textedit(11,"");
+  str2=Textedit(12,"");
+  if((length(str1)>0)&(length(str2)>0),
+    str1=Tocindyform(str1);
+    str2=Tocindyform(str2);
+    ans=Assign("[p,q]",["p",str1,"q",str2]);
+    ans=parse(ans);
+    ans=text(ans);
+    pP=parse(ans);
+    if(|pP-[p1,q1]|<eps,
+      score1="1";
+    ,
+      score1="0";
+    );
+    scoreflg=2;
+  );
+  pP;
+);
+
+Dispscore(score):=(
+  regional(tmp,tfrmpq);
+  //global a1,p1,q1
+  tmp=Assign("a*(x-p)^2+q",
+      ["a",text(a1),"p",text(p1),"q",text(q1)]);
+  tmp=replace(tmp,"1*","");
+  tmp=replace(tmp,"--","+");
+  tmp=replace(tmp,"+-","-");
+//  tmp=replace(tmp,"+0","");
+//  tmp=replace(tmp,"-0","");
+//  tmp=replace(tmp,"(x)","x");
+  tfrmpq=Totexform(tmp);
+  if(score=="1",
+    Drwletter(pB,"正解",20,[0,0,1]);
+  ,
+    Drwletter(pB,"不正解",20,[1,0,0]);
+  );
+  Drwexpr(pB-[0,1],"y="+tfrmpq,20,[0,0,0]);
+  Drwletter(pB-[0,2],"点をグラフ上にとろう",20,[0,0,1]);
+  Drwletter(pB-[0,2.5],"(Tは頂点)",20,[0,0,1]);
+
+);
+
+Drawgraph():=(
+  //global cfrm
+);
+
+Scoregraph():=(
+  regional(gosa1,gosa2,score,flg);
+  //global a1,p1,q1,b1,c1
+  gosa1=0.1; gosa2=0.4;
+  score="";
+  flg=0;
+  if(|T-[p1,q1]|>gosa1,flg=-1);
+  forall([P1,P2,P3,P4],
+    if(|#-f(#.x)|>gosa2,flg=-1);
+  );
+  if(flg==0,
+    score="1";
+  ,
+    score="0";
+  );
+  score;
+);
+
+Dispscoregraph(score):=(
+  regional(pB);
+  pB=[7,-3];
+  if(score=="1",
+    Drwletter(pB,"正解",20,[0,0,1]);
+  ,
+    Drwletter(pB,"不正解",20,[1,0,0]);
+  );
+);
+
+Coordinate():=(
+  regional(hL,vL);
+  hL=[]; vL=[];
+  forall(remove((-4)..4,[0]),
+    hL=concat(hL,[#,text(#)]);
+    vL=concat(vL,[#,text(#)]);
+    draw([XMIN,#],[XMAX,#],color->[0,0,0],size->0.4);
+    draw([#,YMIN],[#,YMAX],color->[0,0,0],size->0.4);
+  );
+  Htickmark(hL,["Size=1.2"]);
+  Vtickmark(hL,["Size=1.2"]);
+);
+
+newflg=1;
+scoreflg=0;
+graphflg=0;
+drawflg=0;
+graphflg=0;
+recordflg=0;
+pB=[-9,-1];
+frm="";
+cfrm="";
+;
+</script>
+<script id="cskeytyped" type="text/x-cindyscript">
+kL=keydownlist();
+if(length(kL)>0,
+  if(kL==[17,70], //Ctr+f (Figures)
+    Viewtex();
+    kc();
+  );
+  if(kL==[16,17,80], //Ctr+Shift+p (Parent)
+    if(length(Shellparent)>0,
+      Makeshell(),Makebat();
+    );
+    WritetoSci(2);
+    kc();
+  );
+  if(kL==[17,74], //Ctr+j (Ketjsoff)
+    Mkketcindyjs(append(KETJSOP,"Web=n"));
+  );
+  if(kL==[16,17,74], //Ctr+Shift+j (Ketjson)
+    Mkketcindyjs(append(KETJSOP,"Web=yj"));
+  );
+);
+</script>
+<script id="csdraw" type="text/x-cindyscript">
+Ketinit();
+Setketcindyjs(["Label=[P1,P2,T,P3,P4]"]);//no ketjs
+
+Displetters();
+Coordinate();
+
+if(newflg==1,
+  flg=1;
+  start=Counttime();
+  while((flg>0)&(Counttime()-start<1),
+    st=Textedit(51,"noname");
+    flg=Confirmstudent(st);
+  );
+  if(flg==0,
+    Startlearning(st);
+    Putpoint("A",[0,0]);
+    newflg=0;
+  );
+);
+
+if(queflg==1,
+  if(NewQues==1,
+    QuesNo=QuesNo+1;
+    tmp=Makequestion();
+    //  ex=tmp_1; ca=tmp_2;
+    a1=tmp_3; p1=tmp_4; q1=tmp_5; b1=tmp_6; c1=tmp_7;
+    frm=tmp_8; cfrm=tmp_9;
+    //global a1,p1,q1,b1,c1,frm,cfrm
+    Startquestion(tmp_1,tmp_2);
+    NewQues=0;
+    EndQues=0;
+    graphflg=0;
+    scoreflg=0;
+  );
+  queflg=0;
+);
+
+if(length(frm)>0,
+  tfrm=Deformtex(frm);
+  Drwletter([-9,2.5],"("+QuesNo+") ",20);
+  Drwexpr([-8,2.5],"y="+tfrm,20);
+);
+
+if(scoreflg==1,
+  ans=Scoring();
+  // global score1
+);
+
+if(length(score1)>0,
+  Dispscore(score1);
+  scoreflg=2;
+,
+  Drwletter(pB,"未入力",20,[0,0,0]);
+  //global score1
+);
+
+if(graphflg==1,
+  if(scoreflg>=2,
+    Plotdata("2",cfrm,"x",["Color=blue","Num=200"]);
+  );
+  if(scoreflg==2,
+    score2=Scoregraph();
+    scoreflg=3;
+    // global score2
+  );
+);
+
+if(length(score2)>0,
+  Dispscoregraph(score2);
+);
+
+if(scoreflg==3,
+  Updatelog();
+  Endquestion(ans,score1+","+score2);
+  NewQues=1;
+  scoreflg=4;
+);
+
+if(recordflg==1,
+  if(scoreflg==4,
+    Subsedit(59,LogData);
+  );
+  recordflg=0;
+);
+
+Ospline("1",[P1,P2,T,P3,P4],["Msg=n"]);
+
+
+Windispg();
+;
+</script>
+    <script type="text/javascript">
+var cdy = CindyJS({
+  scripts: "cs*",
+  defaultAppearance: {
+    dimDependent: 0.7,
+    fontFamily: "sans-serif",
+    lineSize: 1,
+    pointSize: 5.0,
+    textsize: 12.0
+  },
+  angleUnit: "°",
+  geometry: [
+    {name: "SW", type: "Free", pos: [4.0, 4.0, -0.8], color: [1.0, 0.0, 0.0], labeled: true},
+    {name: "NE", type: "Free", pos: [4.0, 4.0, 0.8], color: [1.0, 0.0, 0.0], labeled: true},
+    {name: "Text11", type: "EditableText", pos: [4.0, -0.37209302325581395, -0.4673929939701664], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 1.0, minwidth: 55, textsize: 18.0},
+    {name: "Text12", type: "EditableText", pos: [4.0, -0.4884488448844884, -0.5969672893282323], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 1.0, minwidth: 55, textsize: 18.0},
+    {name: "P1", type: "Free", pos: [-1.5094339622641508, -4.0, 0.7547169811320754], color: [1.0, 0.0, 0.0], labeled: true, size: 6.0},
+    {name: "P2", type: "Free", pos: [-0.7547169811320754, -4.0, 0.7547169811320754], color: [1.0, 0.0, 0.0], labeled: true, size: 6.0},
+    {name: "T", type: "Free", pos: [0.0, -4.0, 0.7547169811320754], color: [1.0, 0.0, 0.0], labeled: true, size: 6.0},
+    {name: "P3", type: "Free", pos: [0.7547169811320754, -4.0, 0.7547169811320754], color: [1.0, 0.0, 0.0], labeled: true, size: 6.0},
+    {name: "P4", type: "Free", pos: [1.5094339622641508, -4.0, 0.7547169811320754], color: [1.0, 0.0, 0.0], labeled: true, size: 6.0},
+    {name: "Text51", type: "EditableText", pos: [4.0, -2.014814814814815, -0.44661997201593684], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 1.0, minwidth: 150, text: "ID=", textsize: 20.0},
+    {name: "Text59", type: "EditableText", pos: [-3.613333333333333, -4.0, 0.665153246094099], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 1.0, minwidth: 700, textsize: 16.0},
+    {name: "Text1", type: "Button", color: [0.0, 0.0, 0.0], fillcolor: [1.0, 0.286, 0.286], fillalpha: 0.27272728085517883, script: "Viewtex();\nkc();", text: "Figure", textsize: 18.0, dock: {corner: "UL", offset: [10.0, -20.0]}},
+    {name: "Text2", type: "Button", color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 0.0], fillalpha: 0.27272728085517883, script: "if(length(Shellparent)>0,\n  Makeshell(),Makebat();\n);\nif(indexof(Libname,\"sci\")>0,\n  writetosci(2),writetoRS(2)\n);\nkc();", text: "Parent", textsize: 18.0, dock: {corner: "UL", offset: [77.0, -20.0]}},
+    {name: "Text3", type: "Button", color: [0.0, 0.0, 0.0], fillcolor: [1.0, 0.929, 0.6], fillalpha: 0.27272728085517883, script: "Parafolder();", text: "ParaF", textsize: 18.0, dock: {corner: "UL", offset: [295.0, -20.0]}},
+    {name: "Text4", type: "Button", color: [0.0, 0.0, 0.0], fillcolor: [0.51, 0.949, 1.0], fillalpha: 0.27272728085517883, script: "Mkanimation();", text: "Anime", textsize: 18.0, dock: {corner: "UL", offset: [355.0, -20.0]}},
+    {name: "Text5", type: "Button", color: [0.0, 0.0, 0.0], fillcolor: [0.0, 0.0, 1.0], fillalpha: 0.27272728085517883, script: "Mkflipanime();", text: "Flip", textsize: 18.0, dock: {corner: "UL", offset: [423.0, -20.0]}},
+    {name: "Text21", type: "Button", color: [0.0, 0.0, 0.0], fillcolor: [0.0, 1.0, 1.0], fillalpha: 0.5726495726495726, script: "Mkketcindyjs(append(KETJSOP,\"Web=y\"));", text: "Ketjson", textsize: 18.0, dock: {corner: "UL", offset: [144.0, -20.0]}},
+    {name: "Text22", type: "Button", color: [0.0, 0.0, 0.0], fillcolor: [0.0, 1.0, 1.0], fillalpha: 0.4358974358974359, script: "Mkketcindyjs(append(KETJSOP,\"Web=n\"));", text: "Ketjsoff", textsize: 18.0, dock: {corner: "UL", offset: [218.0, -20.0]}},
+    {name: "Text13", type: "Button", pos: [4.0, -2.2215225437130552, -0.6166974307056893], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 0.27272728085517883, script: "queflg=1;", text: "出題", textsize: 18.0},
+    {name: "Text15", type: "Button", pos: [4.0, 0.04225352112676056, -0.6369052417832902], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 0.27272728085517883, script: "scoreflg=1;\n", text: "採点", textsize: 18.0},
+    {name: "Text14", type: "Button", pos: [4.0, -1.261744966442953, 0.6069835190149476], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 0.27272728085517883, script: "graphflg=1;", text: "グラフ採点", textsize: 18.0},
+    {name: "Text16", type: "Button", pos: [4.0, -2.357541899441341, 0.5052544376157945], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 0.27272728085517883, script: "recordflg=1;", text: "記録", textsize: 18.0}
+  ],
+  ports: [{
+    id: "CSCanvas",
+    width: 1010,
+    height: 550,
+    transform: [{visibleRect: [-10.800329181708669, 5.787897532341275, 11.901715508251282, -6.574602051300283]}],
+    grid: 0.5,
+    snap: true,
+    background: "rgb(168,176,192)"
+  }],
+  csconsole: false,
+  cinderella: {build: 2006, version: [3, 0, 2006]}
+});
+    </script>
+</head>
+<body>
+    <div id="CSCanvas"></div>
+</body>
+</html>
