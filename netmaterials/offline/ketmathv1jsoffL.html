@@ -103,6 +103,8 @@ Ketinit(work,strictsep):=( //200509
   KCOLOR=[0,0,0,1]; //200513,200618
   GLIST=[]; //201005rechanged
   GCLIST=[]; //201005rechanged
+  AddGraphList=[]; //210422[2lines]
+  PointDataList=[];
   if(!islist(VLISTadd),VLIST=[],VLIST=VLISTadd); //200123
   if(!islist(FUNLISTadd),FUNLIST=[],FUNLIST=FUNLISTadd); //200123
   LETTERlist=[];
@@ -113,7 +115,6 @@ Ketinit(work,strictsep):=( //200509
   LFmark=unicode("000a"); Bs=unicode("005c");
   CRmark=unicode("000d");//16.12.13
   Dq=unicode("0022");
-  Fillstore(); //181212
   Fnametex=Fhead+".tex";
   FnameR=Fhead+".r";
   FnamebodyR=Fhead+"body.r";
@@ -466,15 +467,10 @@ Divoptions(options):=(
   );
   [Ltype,Noflg,Inflg,Outflg,eqL,realL,strL,color,opstr,opcindy];
 );
-Strsplit(str,key):=( //180505
-  regional(start,out,tmp1,tmp2);
-  tmp1=Indexall(str,key);
-  out=[]; start=0;
-  forall(tmp1,
-    out=append(out,substring(str,start,#-1));
-    start=#;
-  );
-  out=append(out,substring(str,start,length(str)));
+Strsplit(str,key):=( // 210422 renewed
+  regional(tmp,out);
+  tmp=tokenize(str,key);
+  out=apply(tmp,if(!isstring(#),Textformat(#,10),#));
   out;
 );
 Colorname2cmyk(name):=( //181212
@@ -1017,11 +1013,7 @@ Enclosing2(nm,plistorg,options):=(
     println("generate Enclosing "+name);
     tmp=name+"="+Textformat(AnsL,10)+";"; //190415
     parse(tmp);
-    tmp=name+"=Enclosing2(";//16.11.07from
-    tmp1="list"+PaO();
-    forall(plistorg, //18.02.02
-      tmp1=tmp1+#+",";
-    );
+    Listplot("-"+name,parse(name),["nodisp"]); //210421
   );
   if(Noflg<3, //190818
     if(isstring(Ltype),
@@ -1869,19 +1861,6 @@ Unscaling(pdata):=(
   );
   Out;
 );
-PaO():=PaO("");
-PaO(Arg):=(
-  regional(out);
-  if(isstring(Arg),
-    out="("+Arg;
-  ,
-    out="";
-    repeat(Arg,
-      out=out+"(";
-    );
-  );
-  out;
-);
 Shadein(pstrorg):=( //190220
   regional(pstr,ptL,pL,crv,nn,
       tmp,tmp1,tmp2,pm1,pm2,p1,p2,flg);
@@ -2624,8 +2603,8 @@ Drwxy(add,optionsorg):=(
     tmp=select(strL,contains(["dr","da","do","id"],substring(#,0,2)));
     if(length(tmp)==0,options=append(options,YasenStyle));
     tmp=substring(ax_1,1,length(ax_1)); //181216[2lines]
-    if(length(tmp)>0,size=parse(tmp),size=YaSize);
-    tmp1=concat(options,[size,YaAngle,YaPosition,YaCut,colorax]);//181216
+    if(length(tmp)>0,size=parse(tmp),size=YaSize); 
+    tmp1=concat(options,[size,YaAngle,YaPosition,YaCut,colorax]);//210425
     tmp=[[xrng_1,org_2],[xrng_2,org_2]];
     Arrowdataseg("axx"+text(AXCOUNT),tmp,tmp1);
     tmp=[[org_1,yrng_1],[org_1,yrng_2]];
@@ -2751,9 +2730,9 @@ Ketcindyjsscale=1;
 
 Modifyfortex(str):=(
   regional(rep1L,rep2L,nn,tmp,tmp1,out);
-  rep1L=["(sp)","(cross)","(cdot)","^(circ)","(neq)",
+  rep1L=["(sp)","(cross)","(cdot)","(cir)","(neq)",
          "(geq)","(leq)","(pm)","(mp)"];
-  rep2L=["\;","\times ","\cdot ","^{\circ}","\neq ",
+  rep2L=["\;","\times ","\cdot ","^{circ()}","\neq ",
          "\geq ","\leq ","\pm ","\mp "];
   out=str;
   forall(1..(length(rep1L)),nn,
@@ -3081,6 +3060,7 @@ forall(1..(length(sL)),nn,
         tmp2=indexof(tmp1,"gr(");
         ctr=ctr+1;
       );
+      tmp1=replace(tmp1,"c i r c()","\circ"); //210425
       strt=strt+"$"+tmp1+"$";
     );
   );
@@ -3158,7 +3138,7 @@ var cdy = CindyJS({
     {name: "Text26", type: "Button", pos: [4.0, 3.3570169261470815, -0.344740917252686], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 0.0], fillalpha: 1.0, text_fontfamily: "monospace", script: "funflg=1;\nname=\"Lg\";\n", text: "ｇ", textsize: 30.0},
     {name: "Text23", type: "Button", pos: [4.0, 2.442490703195401, -0.2540764919930562], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 0.0], fillalpha: 1.0, text_fontfamily: "monospace", script: "funflg=1;\nname=\"Ld\";\n", text: "ｄ", textsize: 30.0},
     {name: "Text28", type: "Button", pos: [4.0, 3.007330031200041, -0.42136829017206756], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 0.0], fillalpha: 1.0, text_fontfamily: "monospace", script: "funflg=1;\nname=\"Li\";\n", text: "ｉ", textsize: 30.0},
-    {name: "Text81", type: "Button", pos: [4.0, 1.891764958582121, -0.41976167344768966], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 0.0], fillalpha: 1.0, text_fontfamily: "monospace", script: "funflg=1;\nname=\"^(circ)\";\n", text: "゜", textsize: 30.0},
+    {name: "Text81", type: "Button", pos: [4.0, 1.891764958582121, -0.41976167344768966], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 0.0], fillalpha: 1.0, text_fontfamily: "monospace", script: "funflg=1;\nname=\"(cir)\";\n", text: "゜", textsize: 30.0},
     {name: "Text84", type: "Button", pos: [4.0, -1.6498435029973146, 0.17085750113168718], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 0.0], fillalpha: 1.0, script: "funflg=1;\nname=\"(cdot)\";\n", text: "・", textsize: 30.0},
     {name: "Text37", type: "Button", pos: [0.7776669381182681, -4.0, 0.3270856165697802], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 0.0], fillalpha: 1.0, text_fontfamily: "monospace", script: "funflg=1;\nname=\"Lr\";", text: "ｒ", textsize: 30.0},
     {name: "Text27", type: "Button", pos: [-3.9187345398022018, -4.0, 0.41495258768928756], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 0.0], fillalpha: 1.0, text_fontfamily: "monospace", script: "funflg=1;\nname=\"Lh\";\n", text: "ｈ", textsize: 30.0},
@@ -3204,8 +3184,8 @@ var cdy = CindyJS({
   ports: [{
     id: "CSCanvas",
     width: 1103,
-    height: 514,
-    transform: [{visibleRect: [-23.554407523996687, 13.47740835497766, 39.21542613054931, -15.773447944602252]}],
+    height: 494,
+    transform: [{visibleRect: [-23.53157408536244, 13.458808394651069, 39.23825956918356, -14.653882290159197]}],
     axes: true,
     grid: 1.0,
     background: "rgb(247,247,247)"
