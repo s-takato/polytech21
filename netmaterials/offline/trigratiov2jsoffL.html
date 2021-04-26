@@ -1578,8 +1578,8 @@ Drwxy(add,optionsorg):=(
     tmp=select(strL,contains(["dr","da","do","id"],substring(#,0,2)));
     if(length(tmp)==0,options=append(options,YasenStyle));
     tmp=substring(ax_1,1,length(ax_1)); //181216[2lines]
-    if(length(tmp)>0,size=parse(tmp),size=YaSize);
-    tmp1=concat(options,[size,Yamov,YaPosition,YaCut,colorax]);//181216
+    if(length(tmp)>0,size=parse(tmp),size=YaSize); 
+    tmp1=concat(options,[size,YaAngle,YaPosition,YaCut,colorax]);//210425
     tmp=[[xrng_1,org_2],[xrng_2,org_2]];
     Arrowdataseg("axx"+text(AXCOUNT),tmp,tmp1);
     tmp=[[org_1,yrng_1],[org_1,yrng_2]];
@@ -1959,7 +1959,7 @@ Makeques():=(
 
 Drawfig():=(
   regional(tmp,ang);
-  Circledata("1",[pO,Dist],["Rng=[0,pi/2]","nodisp"]);
+  Circledata("1",[pO,Dist],["Rng=[0,pi/2]","Num=25","nodisp"]);
   Putoncurve("A","cr1");
   tmp=Crossprod(pA1,A.xy)/(|pA1|*|A.xy|);
   ang=arcsin(tmp);
@@ -2113,7 +2113,7 @@ var cdy = CindyJS({
     {name: "Text13", type: "EditableText", pos: [4.0, 1.5106744027133063, 0.6509177492631637], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 1.0, minwidth: 80, textsize: 20.0},
     {name: "Text14", type: "EditableText", pos: [4.0, 1.1368520758597498, 0.6509177492631637], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 1.0, minwidth: 80, textsize: 20.0},
     {name: "Text15", type: "EditableText", pos: [4.0, 0.7410402003677489, 0.6509177492631637], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 1.0, minwidth: 80, textsize: 20.0},
-    {name: "A", type: "Free", pos: [0.0, 0.0, 4.0], color: [1.0, 0.0, 0.0], labeled: false, size: 5.5, border: true },
+    {name: "A", type: "Free", pos: [4.0, 3.3112934531948053, 1.0389610389610389], color: [1.0, 0.0, 0.0], labeled: false, size: 5.5, border: true },
     {name: "Text31", type: "Button", pos: [2.2637785955020955, -4.0, -1.0040496635843126], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 0.27272728085517883, script: "quesflg=1;", text: "出題", textsize: 18.0},
     {name: "Text32", type: "Button", pos: [4.0, 0.3566171269504895, 0.6461127804278772], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 0.27272728085517883, script: "scoreflg=1;", text: "採点", textsize: 18.0},
     {name: "Tex33", type: "Button", pos: [4.0, -0.49945491970361383, 0.6439851812978791], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 0.27272728085517883, script: "recordflg=1;", text: "記録", textsize: 18.0}
@@ -2121,8 +2121,8 @@ var cdy = CindyJS({
   ports: [{
     id: "CSCanvas",
     width: 906,
-    height: 522,
-    transform: [{visibleRect: [-4.689212497249676, 5.7325040849155675, 8.856431153636295, -2.071939607978999]}],
+    height: 490,
+    transform: [{visibleRect: [-4.687151528203921, 5.718773395655501, 8.858492122682051, -1.607236967406448]}],
     axes: true,
     grid: 0.5,
     background: "rgb(247,247,247)"
