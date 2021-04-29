@@ -1,0 +1,369 @@
+use("KetCindyPlugin");
+Dircdy=loaddirectory;
+setdirectory(gethome());
+import("ketcindy.ini");
+
+Modifyfortex(str):=(
+  regional(rep1L,rep2L,nn,tmp,tmp1,out);
+  rep1L=["(sp)","(cross)","(cdot)","(cir)","(neq)",
+         "(geq)","(leq)","(pm)","(mp)"];
+  rep2L=["\;","\times ","\cdot ","^{circ()}","\neq ",
+         "\geq ","\leq ","\pm ","\mp "];
+  out=str;
+  forall(1..(length(rep1L)),nn,
+    out=replace(out,rep1L_nn,rep2L_nn);
+  );
+  out;
+);
+
+Togreek(str):=(
+  regional(chr,alph,Alph,grk,Grk,out,flg,tmp);
+  alph="abgdezhtiklmnxprstufcqov";
+  grk=["alpha","beta","gamma","delta","epsilon","zeta",
+       "eta","theta","iota","kappa","lambda","mu","nu",
+       "xi","pi","rho","sigma","tau","upsilon",
+       "phi","chi","psi","omega","varphi"];
+  Alph="GDTLPSFQO";
+  Grk=["Gamma","Delta","Theta","Lambda","Pi",
+       "Sigma","Phi","Psi","Omega"];
+  out="";
+  forall(1..(length(str)),
+    chr=str_#;
+    flg=0;
+    tmp=indexof(alph,chr);
+    if(tmp>0,
+      out=out+"\"+grk_(tmp)+" ";
+      flg=1;
+    );
+    if(flg==0,
+      tmp=indexof(Alph,chr);
+      if(tmp>0,
+        out=out+"\"+Grk_(tmp)+" ";
+        flg=1;
+      );
+    );
+    if(flg==0,out=out+chr);
+  );
+  out;
+);
+
+Noascii(str):=(
+  regional(ascii,out,tmp,tmp1);
+  ascii=apply(32..126,unicode(text(#),base->10));
+  out="";
+  forall(1..(length(str)),
+    tmp=Op(#,str);
+    if(!contains(ascii,tmp),
+      out=out+tmp;
+    );
+  );
+  out;
+);
+
+tmp1=32..126;
+tmp=(65..90)++(97..122);
+tmp1=remove(tmp1,tmp);
+alpha=apply(tmp,unicode(text(#),base->10));
+tmp=[46]++(48..57);
+tmp1=remove(tmp1,tmp);
+numer=apply(tmp,unicode(text(#),base->10));
+
+Charstyle(str):=(
+  regional(ctr,tmp,tmp1,tmp2,tmp3,out);
+  out=str;
+  tmp=indexof(out,"{C}");
+  ctr=0;
+  while((tmp>0)&(ctr<20),
+    tmp3=substring(out,tmp+2,tmp+3);
+    tmp3=Toupper(tmp3);
+    tmp3=substring(out,0,tmp-1)+tmp3;
+    out=tmp3+substring(out,tmp+3,length(out));
+    tmp=indexof(out,"{C}");
+    ctr=ctr+1;
+  );
+  tmp=indexof(out,"{G}");
+  ctr=0;
+  while((tmp>0)&(ctr<20),
+    tmp3=substring(out,tmp+2,tmp+3);
+    tmp3=Togreek(tmp3);
+    tmp3=substring(out,0,tmp-1)+tmp3;
+    out=tmp3+substring(out,tmp+3,length(out));
+    tmp=indexof(out,"{G}");
+    ctr=ctr+1;
+  );
+  tmp=indexof(out,"{B}");
+  ctr=0;
+  while((tmp>0)&(ctr<20),
+    tmp3=substring(out,tmp+2,tmp+3);
+    tmp3="\mathbf{"+tmp3+"}";
+    tmp3=substring(out,0,tmp-1)+tmp3;
+    out=tmp3+substring(out,tmp+3,length(out));
+    tmp=indexof(out,"{B}");
+    ctr=ctr+1;
+  );
+  out;
+);
+
+Addat(str):=(
+  regional(ascii,out,flg,tmp);
+  ascii=apply(32..126,unicode(text(#),base->10));
+  ascii=remove(ascii,["@"]);
+  out="";
+  flg=0;
+  forall(1..(length(str)),
+    tmp=str_#;
+    if(tmp=="@",
+      flg=1-flg
+    ,
+      if(!contains(ascii,tmp),
+        if(flg==0,
+          tmp="@"+tmp+"@";
+        );
+      );
+    );
+    out=out+tmp;
+  );
+  out=replace(out,"@@","");
+  out;
+);
+
+Sepchar(strorg):=(
+  regional(str,out,flg,err,tmp,tmp1,tmp2);
+  str=Addat(strorg);
+  err="";
+  out=[];
+  tmp1=Indexall(str,"@");
+  tmp=length(tmp1);
+  if((length(str)==0)%(tmp==0)%(mod(tmp,2)==1),
+    if((length(str)==0)%(tmp==0),
+      if(length(str)==0,out=[],out=[str]);
+    ,
+      err="@の数";
+    );
+  ,
+    tmp=tmp1_1;
+    if(tmp>1,
+      out=[substring(str,0,tmp-1)];
+    );
+    start=tmp;
+    flg=1;
+    forall(2..(length(tmp1)),
+      if(flg==1,
+        tmp2=substring(str,start-1,tmp1_#-1);
+      ,
+        tmp2=substring(str,start,tmp1_#-1);
+      );
+      out=append(out,tmp2);
+      start=tmp1_#;
+      flg=1-flg;
+    );
+    if(start<length(str),
+      tmp2=substring(str,start,length(str));
+      out=append(out,tmp2);
+    );
+  );
+  [out,err];
+);
+
+Highlight():=(
+  regional(cL);
+  if(chno==1,cL=[1,0,0]);
+  if(chno==2,cL=[0,1,0]);
+  if(chno==3,cL=[0,0,1]);
+//  inspect(Text4,"color",cL_1);
+//  inspect(Text5,"color",cL_2);
+//  inspect(Text6,"color",cL_3);
+);
+
+Instr(key):=(
+  regional(out,tmp,tmp1);
+  if(length(key)==1,out=key);
+  if(length(key)==2,
+    tmp=substring(key,0,1);
+    tmp1=substring(key,1,2);
+    if((tmp=="L")%(tmp=="n"),
+      out=tmp1;
+      if(capflg==1,
+        if((out>="a")&(out<="z"),
+          out=Toupper(out);
+        );
+        tmp=StrL_chno;
+        StrL_chno=substring(tmp,0,length(tmp)-3);
+        capflg=0;
+      );
+    ,
+      out=key;
+    );
+  );
+  if(length(key)>=3,
+    if(indexof(key,"()")>0,
+      if(indexof(key,"Delete")>0,Delete());
+      if(indexof(key,"Allclear")>0,Allclear());
+      out="";
+    ,
+      if(key=="(C)",capflg=1);
+      out=key;
+    );
+  );
+  out;
+);
+
+Dispposition():=(
+  regional(tmp,tmp1,posletter);
+  tmp1=StrL_chno;
+  posletter=[33,1];
+  if(length(tmp1)>0,
+    if(npos==0,tmp=""+tmp1_1);
+    if(npos>0,
+      tmp=tmp1_(npos)+"";
+      if(npos<length(tmp1),
+        tmp=tmp+tmp1_(npos+1);
+      );
+    );
+    drawtext(posletter,tmp,size->24);
+//    drawtext(posletter,"|",size->24,color->[0,0,1],align->mid);
+  );
+);
+
+Dispedit():=(
+  Subsedit(1,StrL_1);
+  Subsedit(2,StrL_2);
+  Subsedit(3,StrL_3);
+);
+
+Delete():=(
+  regional(tmp);
+  tmp=StrL_chno;
+  tmp1=substring(tmp,0,npos-1);
+  tmp2=substring(tmp,npos,length(tmp));
+  StrL_chno=tmp1+tmp2;
+  npos=max([0,npos-1]);
+//  if(npos==0,npos=length(tmp1+tmp2));
+  Dispedit();
+  funflg=0;
+);
+
+Allclear():=(
+  StrL_chno="";
+  Dispedit();
+  funflg=0;
+);
+
+Addat():=(
+  
+
+);
+
+chno=1;
+funflg=0;
+texflg=0;
+capflg=0;
+initpos=1;
+StrL=["","",""];
+
+////////////figures/////////
+
+//Ketinit("");
+Ketinit();
+
+Setketcindyjs(["Label=[]","Color=offwhite"]);//no ketjs on
+Ketcindyjsbody([],["<footer>","<p><small>&copy; 2021 Setsuo Takato</small></p>","</footer>"]);
+Seteditable(1,["","Size=24","Width=850"]);
+Seteditable(2,["","Size=24","Width=850"]);
+Seteditable(3,["","Size=24","Width=850"]);
+Seteditable(7,["","Size=24","Width=650"]);
+//Seteditable(8,["","Size=24","Width=35"]);
+// no ketjs off
+
+/////////////////////////////////////////////
+Setwindow([-5,20],[-13,10]);
+Addax(0);
+
+posx=-14;
+posy=4.4;
+dposy=2;
+
+pos=[posx-0.6,10.9-1.8*(chno-1)];
+Circledata("1",[pos,0.5],["Num=20","Color=red","Msg=n"]);
+Shade(["cr1"],["Color=red"]);
+
+str1=Textedit(1,"","");
+str2=Textedit(2,"","");
+str3=Textedit(3,"","");
+StrL=[str1,str2,str3];
+
+//StrL=["sin(x)","",""];
+
+if(initpos==1,
+  npos=length(StrL_chno);
+  initpos=0;
+);
+
+if(funflg==1,
+  str=Instr(name);
+  tmp=StrL_chno;
+  tmp1=substring(tmp,0,npos);
+  tmp2=substring(tmp,npos,length(tmp));
+  StrL_chno=tmp1+str+tmp2;
+  npos=length(tmp1+str);
+  funflg=0;
+);
+
+Dispedit();
+Dispposition();
+
+texstr="";
+sL=[];
+forall(1..3,nn,
+  tmp=StrL_nn;
+  tmp1=tokenize(tmp,"//");
+  tmp1=apply(tmp1,if(isstring(#),#,text(#)));
+  sL=concat(sL,tmp1);
+);
+
+sL=select(sL,length(#)>0);
+forall(1..(length(sL)),nn,
+  str=sL_nn;
+  err="";
+  tmp=Sepchar(str);
+  subL=tmp_1;
+  err=tmp_2;
+  strt="";
+  forall(subL,
+    if(substring(#,0,1)=="@",
+      strt=strt+substring(#,1,length(#));
+    ,
+      tmp=#;
+//      err=Noascii(tmp);
+//      if(length(err)>0,err="ASCII以外"+err);
+      tmp=Modifyfortex(tmp);
+      tmp=Addasterisk(tmp);
+      tmp1=Totexform(tmp);
+      tmp1=replace(tmp1,"g r(","gr(");
+      ctr=1;
+      tmp2=indexof(tmp1,"gr(");
+      while((tmp2>0)&(ctr<100),
+        tmp=Bracket(tmp1,"()");
+        tmp=select(tmp,(tmp2<#_1)&(#_2<0));
+        tmp3=tmp_1_1;
+        tmp=substring(tmp1,tmp2+2,tmp3-1);
+        tmp4=Togreek(tmp);
+        tmp=substring(tmp1,0,tmp2-1)+tmp4;
+        tmp1=tmp+substring(tmp1,tmp3,length(tmp1));
+        tmp2=indexof(tmp1,"gr(");
+        ctr=ctr+1;
+      );
+      tmp1=replace(tmp1,"c i r c()","\circ"); //210425
+      strt=strt+"$"+tmp1+"$";
+    );
+  );
+  drawtext([0,posy],strt,size->24);posy=posy-dposy;
+  texstr=texstr+strt;
+  if(nn<length(sL),texstr=texstr+"\\");
+);
+
+if(texflg==1,
+  Subsedit(7,texstr);
+);
+
+Windispg();
