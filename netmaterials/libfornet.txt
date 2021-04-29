@@ -1,4 +1,4 @@
-// LIbrary for net materials   20200420
+// LIbrary for net materials   20200427
 // StartTime, LogData, QuesData, QuestNo, NewLearn, NewQues, EndQues はグローバル変数
 
 // Startlearning(studentname) stnameと開始の年月日時刻データを追加した文字列を返す
@@ -69,17 +69,21 @@ Startlearning(studentname):=(
   st=studentname;
   if(length(st)==0,st="noname");
   LogData=st+";;"+Getcurtime();
+  EndQues=1;  //210424
+  NewLearn=0; //210424
 );
 
 Startquestion(question,correct):=(
   regional(no,ex,ca);
   StartTime=Counttime();
+  QuesNo=QuesNo+1; //210424
   no=text(QuesNo);
   ex=question;
   if(!isstring(ex),ex=text(ex));
   ca=correct;
   if(!isstring(ca),ca=text(ex));
   QuesData=no+";;"+ex+";;"+ca;
+  EndQues=0;  //210424
 );
 
 Endquestion(studentans,studentscore):=(
@@ -107,7 +111,7 @@ Updatelog():=(
       tmp2=tmp_(1..(length(tmp)-1));
       tmp=tokenize(tmp1,";;");
       tmp=tmp_1;
-      if(tmp==QuesNo-1,
+      if(tmp==QuesNo, //210425å
         LogData=tmp2_1;
         forall(2..(length(tmp2)),
           LogData=LogData+"||"+tmp2_#;
@@ -138,6 +142,50 @@ Log2csv(dt):=(
       if(#<length(tmp1),tmp2=tmp2+",");
     );
     out=out+","+tmp2;
+  );
+  out;
+);
+
+Displetters(msgLorg):=(
+  regional(msgL,pos,str,size,color);
+  msgL=msgLorg;
+  if(isstring(msgL_1),msgL=[msgL]);
+  forall(msgL,
+    pos=#_2;
+    str=#_1;
+    if(length(#)>2,size=#_3,size=16);
+    if(length(#)>3,color=#_3,color=[0,0,0]);    
+    Drwletter(pos,str,size,color);
+  );
+);
+
+Dispexprs(msgLorg):=(
+  regional(msgL,pos,str,size,color);
+  msgL=msgLorg;
+  if(isstring(msgL_1),msgL=[msgL]);
+  forall(msgL,
+    pos=#_2;
+    str=#_1;
+    if(length(#)>2,size=#_3,size=16);
+    if(length(#)>3,color=#_3,color=[0,0,0]);    
+    Drwexpr(pos,str,size,color);
+  );
+);
+
+Confirmstudent(st,Students):=(
+  regional(out,tmp,tmp1);
+  if(length(st)==1,st="0"+st);
+  tmp=substring(st,0,2);
+  tmp1=select(Students,indexof(#,tmp)>0);
+  if(length(tmp1)==0,
+    if(st=="noname",
+      out=[1,"番号入力",""];
+    ,
+      out=[2,"番号違い",""];
+    );
+  ,
+    tmp1=tmp1_1;
+    out=[0,"OK=>",tmp1];
   );
   out;
 );

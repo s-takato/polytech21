@@ -36,6 +36,61 @@ Inwindow(point,xrng,yrng):=(
   tmp=(x>xmin-Eps)&(x<xmax+Eps)&(y>ymin-Eps)&(y<ymax+Eps);
   if(tmp,true,false);
 );
+Putpoint(name,Pt):=Putpoint(name,Pt,Pt);
+Putpoint(name,Ptinit,Pt):=(
+  regional(ptstr); 
+    ptstr=name+".xy="+Textformat(Pcrd(Pt),10)+";";
+    parse(ptstr);
+    Ptpos(name,Pcrd([Pt_1,Pt_2])); //200529
+);
+Textformat(value,dig):=(
+  regional(vv,tmp,tmp1);
+  if(islist(value),
+    tmp1="[";
+    forall(value,
+      tmp1=tmp1+Textformat(#,dig)+",";
+    );
+    if(length(tmp1)>1, //18.01.29from
+      tmp1=substring(tmp1,0,length(tmp1)-1);
+    );
+    tmp1=tmp1+"]"; //18.01.29until
+  ,
+    if(ispoint(value) % isstring(value),
+      if(isstring(value),tmp1=Dq+value+Dq,tmp1=text(value)); // 15.10.02
+    ,
+      tmp1=format(value,dig);
+    );
+  );
+  tmp1;
+);
+Ptpos(pt):=Ptpos(pt,[]);
+Ptpos(ptorg,pos):=(
+  regional(pt,out,tmp);
+  if(ispoint(ptorg),pt=ptorg,pt=parse(ptorg));
+  if(length(pos)==0,
+    tmp=pt.name+"position";
+    out=parse(tmp);
+    if(!islist(out),
+      tmp=tmp+"="+Textformat(pt.xy,12)+";";  //200108 6->12
+      parse(tmp);
+    );
+  ,
+    pt.xy=pos;
+    tmp=pt.name+"position="+Textformat(pt.xy,12)+";"; //200108 6->12
+    parse(tmp);
+    out=pt.xy;
+  );
+  out;
+);
+Pcrd(pt):=(
+  regional(tmp);
+  if(ispoint(pt),
+    tmp=pt.xy;
+  ,
+    tmp=[pt_1*SCALEX,pt_2*SCALEY];
+  );
+ re(tmp); //191231
+);
 Tocindyform(str):=( //190521
   regional(funL,out,plv,flg,nn,tmp,tmp1);
   out=str;
@@ -194,26 +249,6 @@ Strsplit(str,key):=( // 210422 renewed
   tmp=tokenize(str,key);
   out=apply(tmp,if(!isstring(#),Textformat(#,10),#));
   out;
-);
-Textformat(value,dig):=(
-  regional(vv,tmp,tmp1);
-  if(islist(value),
-    tmp1="[";
-    forall(value,
-      tmp1=tmp1+Textformat(#,dig)+",";
-    );
-    if(length(tmp1)>1, //18.01.29from
-      tmp1=substring(tmp1,0,length(tmp1)-1);
-    );
-    tmp1=tmp1+"]"; //18.01.29until
-  ,
-    if(ispoint(value) % isstring(value),
-      if(isstring(value),tmp1=Dq+value+Dq,tmp1=text(value)); // 15.10.02
-    ,
-      tmp1=format(value,dig);
-    );
-  );
-  tmp1;
 );
 Assign(str):=( //190125from
   regional(tmp);
@@ -719,15 +754,6 @@ Colorrgb2cmyk(clr):=(
   );
   clrnew;
 );
-Pcrd(pt):=(
-  regional(tmp);
-  if(ispoint(pt),
-    tmp=pt.xy;
-  ,
-    tmp=[pt_1*SCALEX,pt_2*SCALEY];
-  );
- re(tmp); //191231
-);
 Getlinestyle(str,name):=(
   regional(noflg,tmp,tmp1,tmp2,Dop,Ltype,subflg);
   Ltype=-1;
@@ -1089,32 +1115,6 @@ LLcrd(pt):=(
   );
   tmp=[tmp_1/SCALEX,tmp_2/SCALEY];
   re(tmp); //191231
-);
-Putpoint(name,Pt):=Putpoint(name,Pt,Pt);
-Putpoint(name,Ptinit,Pt):=(
-  regional(ptstr); 
-    ptstr=name+".xy="+Textformat(Pcrd(Pt),10)+";";
-    parse(ptstr);
-    Ptpos(name,Pcrd([Pt_1,Pt_2])); //200529
-);
-Ptpos(pt):=Ptpos(pt,[]);
-Ptpos(ptorg,pos):=(
-  regional(pt,out,tmp);
-  if(ispoint(ptorg),pt=ptorg,pt=parse(ptorg));
-  if(length(pos)==0,
-    tmp=pt.name+"position";
-    out=parse(tmp);
-    if(!islist(out),
-      tmp=tmp+"="+Textformat(pt.xy,12)+";";  //200108 6->12
-      parse(tmp);
-    );
-  ,
-    pt.xy=pos;
-    tmp=pt.name+"position="+Textformat(pt.xy,12)+";"; //200108 6->12
-    parse(tmp);
-    out=pt.xy;
-  );
-  out;
 );
 Strictmove(pC):=Strictmove(pC,StrictSep); //190831
 Strictmove(pCorg,sep):=(
@@ -2183,7 +2183,8 @@ Scoring():=(
 );
 
 Dispscore(score):=(
-  regional(tmp,tfrmpq);
+  regional(tmp,tfrmpq,pB);
+  pB=[-9,-1];
   tmp=Assign("a*(x-p)^2+q",
       ["a",text(a1),"p",text(p1),"q",text(q1)]);
   tmp=replace(tmp,"1*","");
@@ -2191,14 +2192,16 @@ Dispscore(score):=(
   tmp=replace(tmp,"+-","-");
   tfrmpq=Totexform(tmp);
   if(score=="1",
-    Drwletter(pB,"正解",20,[0,0,1]);
+    Msgsc1=[["正解",pB,20,[0,0,1]]];
   ,
-    Drwletter(pB,"不正解",20,[1,0,0]);
+    Msgsc1=[["不正解",pB,20,[1,0,0]]];
   );
-  Drwexpr(pB-[0,1],"y="+tfrmpq,20,[0,0,0]);
-  Drwletter(pB-[0,2],"点をグラフ上にとろう",20,[0,0,1]);
-  Drwletter(pB-[0,2.5],"(Tは頂点)",20,[0,0,1]);
-
+  tmp=["$y="+tfrmpq+"$",pB-[0,1],20,[0,0,0]];
+  Msgsc1=append(Msgsc1,tmp);
+  tmp=["点をグラフ上にとろう",pB-0.2,20,[0,0,1]];
+  Msgsc1=append(Msgsc1,tmp);
+  tmp=["(Tは頂点)",pB-[0,2.5],20,[0,0,1]];
+  Msgsc1=append(Msgsc1,tmp);
 );
 
 Drawgraph():=(
@@ -2225,9 +2228,9 @@ Dispscoregraph(score):=(
   regional(pB);
   pB=[7,-3];
   if(score=="1",
-    Drwletter(pB,"正解",20,[0,0,1]);
+    Msgsc2=["正解",pB,20,[0,0,1]];
   ,
-    Drwletter(pB,"不正解",20,[1,0,0]);
+    Msgsc2=["不正解",pB,20,[1,0,0]];
   );
 );
 
@@ -2244,6 +2247,34 @@ Coordinate():=(
   Vtickmark(hL,["Size=1.2"]);
 );
 
+Drwletters(msgLorg):=(
+  regional(msgL,str,pos,size,color);
+  msgL=msgorg;
+  if(length(msgL)>0,
+    if(isstring(msgL_1),msgL=[msgL]);
+    forall(msgL,
+      str=#_1;
+      pos=#_2;
+      if(length(#)>2,size=#_3,size=16);
+      if(length(#)>3,color=#_4,color=[0,0,0]);
+      Drwletter(pos,str,size,color);pos=pos-dpos;
+    );
+  );
+);
+Drwexprs(msgLorg):=(
+  msgL=msgorg;
+  if(length(msgL)>0,
+    if(isstring(msgL_1),msgL=[msgL]);
+    forall(msgL,
+      str=#_1;
+      pos=#_2;
+      if(length(#)>2,size=#_3,size=16);
+      if(length(#)>3,color=#_4,color=[0,0,0]);
+      Drwexpr(pos,str,size,color);pos=pos-dpos;
+    );
+  );
+);
+
 newflg=1;
 scoreflg=0;
 graphflg=0;
@@ -2253,13 +2284,13 @@ recordflg=0;
 pB=[-9,-1];
 frm="";
 cfrm="";
+
+Msgsc1=[];
+Msgsc2=[];
 ;
 </script>
 <script id="csdraw" type="text/x-cindyscript">
 Ketinit();
-
-Displetters();
-Coordinate();
 
 if(newflg==1,
   flg=1;
@@ -2269,31 +2300,35 @@ if(newflg==1,
     flg=Confirmstudent(st);
   );
   if(flg==0,
+    Subsedit(51,"ID="+Student);
     Startlearning(st);
-    Putpoint("A",[0,0]);
     newflg=0;
   );
 );
 
+if(length(Student)>0,
+  Subsedit(51,"ID="+Student);
+);
+
 if(queflg==1,
-  if(NewQues==1,
-    QuesNo=QuesNo+1;
+  if(quesfin==1,
     tmp=Makequestion();
+    Ex=tmp_1; Ca=tmp_2;
     a1=tmp_3; p1=tmp_4; q1=tmp_5; b1=tmp_6; c1=tmp_7;
     frm=tmp_8; cfrm=tmp_9;
     Startquestion(tmp_1,tmp_2);
-    NewQues=0;
-    EndQues=0;
-    graphflg=0;
-    scoreflg=0;
+    quesready=1;
+    quesfin=0;
+    scorefin=0;
   );
   queflg=0;
 );
 
-if(length(frm)>0,
+if(quesready==1,
   tfrm=Deformtex(frm);
   Drwletter([-9,2.5],"("+QuesNo+") ",20);
   Drwexpr([-8,2.5],"y="+tfrm,20);
+
 );
 
 if(scoreflg==1,
@@ -2322,21 +2357,30 @@ if(length(score2)>0,
 );
 
 if(scoreflg==3,
-  Updatelog();
-  Endquestion(ans,score1+","+score2);
-  NewQues=1;
-  scoreflg=4;
+  if((scorefin==0)&(quesfin==0),
+    Updatelog();
+    Endquestion(ans,score1+","+score2);
+    quesfin=1;
+    scorefin=1;
+  );
+  scoreflg=0;
 );
 
 if(recordflg==1,
-  if(scoreflg==4,
+  if(recordfin==0,
     Subsedit(59,LogData);
+    recordfin=1;
   );
   recordflg=0;
 );
 
 Ospline("1",[P1,P2,T,P3,P4],["Msg=n"]);
 
+Displetters();
+Drwletters(Msgsc1);
+Drwletters(Msgsc2);
+
+Coordinate();
 
 Windispg();
 ;
@@ -2372,14 +2416,15 @@ var cdy = CindyJS({
   ],
   ports: [{
     id: "CSCanvas",
-    width: 1010,
-    height: 550,
-    transform: [{visibleRect: [-10.800329181708669, 5.787897532341275, 11.901715508251282, -6.574602051300283]}],
+    width: 982,
+    height: 552,
+    transform: [{visibleRect: [-11.483234608452914, 5.910659844147846, 11.413285971244065, -6.959889402280599]}],
     grid: 0.5,
     snap: true,
     background: "rgb(247,247,247)"
   }],
   csconsole: false,
+  use: ["katex"],
   cinderella: {build: 2006, version: [3, 0, 2006]}
 });
     </script>
