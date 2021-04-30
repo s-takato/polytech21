@@ -214,3 +214,26 @@ Confirmstudent(st,Students):=(
   );
   out;
 );
+
+Csvtext():=Csvtext("alltext");
+Csvtext(fname):=(
+  regional(tmp,tmp1,tL,numL,tnL,fid);
+  tmp=allelements();
+  tmp1=allpoints();
+  tL=remove(tmp,tmp1);
+  numL=apply(tL,replace(#.name,"Text",""));
+  numL=apply(numL,replace(#,"''",".2"));
+  numL=apply(numL,replace(#,"'",".1"));
+  numL=apply(numL,if(length(#)==0,"-1",#));
+  numL=apply(numL,parse(#));
+  tnL=apply(1..(length(numL)),
+     [numL_#,inspect(tL_#,"name"),inspect(tL_#,"text.text")]);
+  tnL=sort(tnL,[#_1]);
+  fid=openfile(fname+".csv");
+  forall(tnL,
+   println(fid,#_1+","+#_2+","+#_3);
+  );
+  closefile(fid);
+  println("generate "+fname+".csv");
+);
+

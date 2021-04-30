@@ -16,7 +16,8 @@ Inf=10^6;
 pO=[0,0];
 
 Makeques():=(
-  regional(inf,ang,rot,tmp,tmp1,Ex,Ca);
+  regional(inf,ang,rot,tmp,tmp1);
+  // global Ex,Ca
   inf=10^5;
   Dist=randomint(3)+3;
   tmp=randomint(10)+9;
@@ -40,7 +41,6 @@ Makeques():=(
   Subsedit(13,"");
   Subsedit(14,"");
   Subsedit(15,"");
-  [Ex,Ca];
 );
 
 Drawfig():=(
@@ -54,9 +54,10 @@ Drawfig():=(
   Listplot("2",[pO,pD2],["dr,1"]);
 );
 
-Scoring(Ex,Ca):=(
+Scoring():=(
   regional(ans,cs,sn,tn,inf,eps,
       stans,pos,size,clr,tmp,tmp1,tmp2);
+  //global Ex,Ca
   pos=[-6,-0.3]; size=20; clr=[1,0,0];
   inf=10^5; eps=0.1;
   cs=-inf; sn=-inf; tn=-inf;
@@ -117,45 +118,15 @@ Dispinitial():=(
 //  Listplot("tn",[[xpos,pos-2*dpos],[xpos+1.2,pos-2*dpos]],["dr,1.5"]);
 );
 
-Instr(key):=(
-  regional(out,tmp,tmp1);
-  if(length(key)==1,out=key);
-  if(length(key)==2,
-    tmp=substring(key,0,1);
-    tmp1=substring(key,1,2);
-    if((tmp=="L")%(tmp=="n"),
-      out=tmp1;
-      if(capflg==1,
-        if((out>="a")&(out<="z"),
-          out=Toupper(out);
-        );
-        tmp=StrL_chno;
-        StrL_chno=substring(tmp,0,length(tmp)-3);
-        capflg=0;
-      );
-    ,
-      out=key;
-    );
+Delete():=(
+  regional(tmp,tmp1);
+  tmp=Textedit(ch,"");
+  if(length(tmp)>0,
+    tmp1=substring(tmp,0,length(tmp)-1);
+    Subsedit(ch,tmp1);
   );
-  if(length(key)>=3,
-    if(indexof(key,"()")>0,
-      if(indexof(key,"Delete")>0,Delete());
-      if(indexof(key,"Allclear")>0,Allclear());
-      out="";
-    ,
-      if(key=="(C)",capflg=1);
-      out=key;
-    );
-  );
-  out;
 );
 
-Inputwin(ch,name):=(
-  regional(str1,str2,tmp,out);
-  str=Textedit(ch,"");
-  str2=Instr(name);
-  if(length(str2)==2,str2=str2_(-1));
-  str=str+str2;
-  Subsedit(ch,str);
-  tmp=Addasterisk(str);
+Allclear():=(
+  Subsedit(ch,"");
 );
