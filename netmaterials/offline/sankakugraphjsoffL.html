@@ -3906,7 +3906,7 @@ Arrowdataseg(nm,ptlistorg,optionsorg):=(
   [LLcrd(pA),LLcrd(pB)];
 );
 Ketcindyjsfigure=0;
-Ketcindyjsscale=1;
+Ketcindyjsscale=0.9;
 
 setdirectory(Dircdy);
 Rec=116;
@@ -4256,7 +4256,7 @@ var cdy = CindyJS({
     {name: "SW", type: "Free", pos: [4.0, 2.1538461538461537, -0.6153846153846154], color: [1.0,1.0,1.0], labeled: false, size: 2.0, border:false },
     {name: "NE", type: "Free", pos: [4.0, 2.1538461538461537, 0.6153846153846154], color: [1.0,1.0,1.0], labeled: false, size: 2.0, border:false },
     {name: "Text5", type: "EditableText", pos: [4.0, -2.4748201438848922, -0.6342132791325021], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 1.0, minwidth: 300, text: "y=", textsize: 30.0},
-    {name: "Text116", type: "EditableText", pos: [-3.545098039215686, -4.0, 1.0371252446990329], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 1.0, minwidth: 600, textsize: 18.0},
+    {name: "Text116", type: "EditableText", pos: [4.0, 2.477825292958859, -0.6237977948505196], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 1.0, minwidth: 600, textsize: 18.0},
     {name: "A", type: "Free", pos: [4.0, 1.5576559546313733, 0.49993749980764973], color: [1.0, 1.0, 1.0], labeled: false, border: false, size: 3.0},
     {name: "Text32", type: "Button", pos: [4.0, 3.1041009463722395, 0.8342805596159412], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 0.8205128205128205, script: "delgraphflg=1;\n", text: "削除", textsize: 18.0},
     {name: "Text30", type: "Button", pos: [4.0, 2.67027027027027, 0.7147755064817659], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 0.8974358974358975, script: "newgraphflg=1;", text: "リセット", textsize: 18.0},
@@ -4297,14 +4297,13 @@ var cdy = CindyJS({
   ],
   ports: [{
     id: "CSCanvas",
-    width: 1227,
-    height: 657,
-    transform: [{visibleRect: [-7.327948132441296, 5.255855471668422, 11.230137230831089, -4.681114441673026]}],
+    width: 1013,
+    height: 565,
+    transform: [{visibleRect: [-7.528843542765537, 5.133592075128652, 11.096184612293305, -5.254079045099547]}],
     grid: 1,
     background: "rgb(247,247,247)"
   }],
   csconsole: false,
-  use: ["katex"],
   cinderella: {build: 2006, version: [3, 0, 2006]}
 });
     </script>
