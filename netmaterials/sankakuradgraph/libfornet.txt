@@ -43,6 +43,7 @@ QuesNo=0;
 StartTime=0;
 
 newflg=1;
+confirmflg=0;
 quesflg=0;
 scoreflg=0;
 scorefin=0;
@@ -113,11 +114,11 @@ Newsession(editno,Arg1,Arg2,Arg3):=(
 Newsession(editno,noinput,pos,size,studentL):=(
   regional(st,tmp,conf,ctr,msg);
   // global Msgnew
-  conf="ok";
+  conf="idok";
   if(newflg==1,
     st=Textedit(editno,noinput);
     if(length(st)==0,
-       conf="no";
+       conf="idno";
        msg=["IDを入力",pos,size,[0,0,1]];
     ,
       if(length(studentL)>0,
@@ -125,7 +126,7 @@ Newsession(editno,noinput,pos,size,studentL):=(
         if(length(conf)>0,
           st=conf;
           Subsedit(editno,"ID="+st);
-          conf="ok";
+          conf="idok";
         ,
           msg=["ID未確認",pos,size,[1,0,0]];
           oonf="unknown";
@@ -133,16 +134,16 @@ Newsession(editno,noinput,pos,size,studentL):=(
       );
     );
   );
-  if(conf=="ok",
+  if(conf=="idok",
     msg=["確認",pos,size,[0,0,1]];
   );
-  msg;
+  [msg,conf];
 );
 
 Startlearning(editno):=(
   regional(stname);
   //global LogData
-  stname=Textedit(editno,"noname");
+  stname=Textedit(editno,"");
   LogData=stname+";;"+Getcurtime();
   LogData;
 );

@@ -1,0 +1,95 @@
+Ketinit();
+
+Setketcindyjs(["Grid=1","Label=[]"]);// no ketjs on
+Ketcindyjsmain(["<pf5/fp>_;Let's draw the graph of $y=f(x)$"]);
+Seteditable(5,["y=","Size=30","Width=300"]);
+Seteditable(6,["-10","Size=16","Width=60"]);
+Seteditable(7,["10","Size=16","Width=60"]);
+Seteditable(8,["100","Size=16","Width=100"]);
+Seteditable(9,["","Size=16","Width=100"]);
+Seteditable(110,["","Size=16","Width=100"]);
+Seteditable(111,["red","Size=16","Width=100"]);
+Seteditable(115,["","Size=16","Width=400"]);
+// no ketjs off
+
+Setwindow([-6.5,6.5],[-3.5,3.5]);
+Addax(0);
+
+Gridpaper();
+
+xL=prepend(8,apply(1..4,6));
+yL=apply(1..6,6);
+Tabledata("1",xL,yL,[],[0,"Setwin=n","Move=[NE.x+0.4,SW.y]"]);
+
+if(newgraphflg==1,Newgraph());
+if(addgraphflg==1,Addgraph());
+if(delgraphflg==1,Delgraph());
+
+
+if(funflg==1,
+  str=Instr(name);
+  if(length(str)>0,
+    keyL=append(keyL,str);//0415
+  );
+  funflg=0;
+);
+
+tmp1=Key2fun();
+tmp2=Textedit(5,"");
+if(length(tmp1)<length(tmp2),
+  tmp=substring(tmp2,length(tmp1),length(tmp2));
+  keyL=append(keyL,tmp);
+);
+fun=Key2fun();
+if(length(fun)>0,
+  Subsedit(5,"y="+fun);
+  tmp=Makefundata(fun);
+  fL_nf=tmp;
+  npos=length(tmp);
+);
+
+fstr="";
+texall="";
+ctr=1;
+forall(1..(length(fL)),
+  tmp=Funrngop(fL_#);
+  fun=tmp_1;
+  rng="x";
+  op=["Num=200","linesize->2"];
+  if(length(fun)>0,
+    fun=Addasterisk(fun);
+    cstr=Tocindyform(fun);
+    tstr=Totexform(fun);
+    texall=texall+tstr+",";
+    Plotdata(text(ctr),cstr+"+0.01","x",op);
+    ctr=ctr+1;
+    fstr=fstr+fL_#+";";
+  );
+);
+
+//Subsedit(115,fstr);
+if(length(texall)>0,
+  tmp=Indexall(texall,",");
+  tmp=select(tmp,#<40);
+  tmp=max(tmp);
+  if(tmp==length(texall),
+    tmp1=substring(texall,0,length(texall)-1);
+    tmp2="";
+  ,
+    tmp1=substring(texall,0,tmp);
+    tmp2=substring(texall,tmp,length(texall)-1);
+  );
+  drawtext([0,4],"$y=\displaystyle "+tmp1+"$",size->18);
+  if(length(tmp2)>0,
+    drawtext([12,2],"$y=\displaystyle "+tmp2+"$",size->18);
+  );
+);
+
+//Framedata2("1",[[-11,11],[11,14.5]],["nodisp"]);
+//Shade(["fr1"],["Color=offwhite"]);
+//Framedata2("2",[[-11,-16],[11,-11]],["nodisp"]);
+//Shade(["fr2"],["Color=offwhite"]);
+
+Windispg();
+
+//Help("Table");

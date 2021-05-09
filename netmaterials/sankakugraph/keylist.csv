@@ -1,0 +1,46 @@
+1,Text1,Figure,18
+2,Text2,Parent,18
+5,Text5,y=,30
+6,Text6,-10,16
+7,Text7,10,16
+8,Text8,100,16
+9,Text9,,16
+10,Text10,０,24
+11,Text11,１,24
+12,Text12,２,24
+13,Text13,３,24
+14,Text14,４,24
+15,Text15,５,24
+16,Text16,６,24
+17,Text17,７,24
+18,Text18,８,24
+19,Text19,９,24
+21,Text21,Ketjson,24
+22,Text22,Ketjsoff,24
+30,Text30,リセット,18
+31,Text31,追加,18
+32,Text32,削除,18
+43,Text43,ｘ,22
+46,Text46,s p c,20
+52,Text52,^,22
+53,Text53,（,22
+54,Text54,）,22
+55,Text55,＊,24
+56,Text56,＋,24
+57,Text57,，,24
+58,Text58,ー,24
+59,Text59,．,24
+60,Text60,／,24
+75,Text75,|,24
+76,Text76,p i,24
+85,Text85,f r,22
+86,Text86,s q,24
+87,Text87,sin,24
+88,Text88,cos,24
+89,Text89,tan,24
+90,Text90,log,24
+91,Text91,Del,24
+92,Text92,AC,24
+110,Text110,,16
+111,Text111,red,16
+115,Text115,,16

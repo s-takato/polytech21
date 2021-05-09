@@ -1,0 +1,75 @@
+////Setting elements
+// no ketjs on
+Seteditable(Id,["ID=","Size=20","Width=150"]);
+Seteditable(Rec,["","Size=16","Width=700"]);
+//Button=[Text13,Text14,Text15,Text16,Text17,Text18];
+//forall(Button,
+//  inspect(#,"colorfill",5);
+//  inspect(#,"fillalpha",1);
+//);
+// no ketjs off
+
+Makeques(pQ,size,color):=(
+  regional(Ex,Ca,t,pt,msg,tmp,flg);
+  //global PtL
+  // global Scorectr
+  if(QuesNo==0, t=0);
+  if(QuesNo==1,t=pi/2);
+  if(QuesNo==2,t=pi);
+  if(QuesNo==3,t=3*pi/2);
+  if(QuesNo==4,t=2*pi);
+  if(QuesNo==5,t=1);
+  if(QuesNo==6,t=2.5);
+  if(QuesNo==7,t=4);
+  if(QuesNo==8,t=5.5);
+  if(QuseNo>8,
+    t=2*pi*random(1);
+  );
+//  if(QuesNo==5,t=tmp*pi/2);
+//  if(QuesNo==6,t=(1+tmp)*pi/2);
+//  if(QuesNo==7,t=(1+1/2*tmp)*pi);
+//  if(QuesNo==8,t=(3/2+1/2*tmp)*pi);
+  pt=[cos(t)-1,sin(t)];
+  tmp=Textformat(pt,2);
+  tmp=Assign(tmp,["[","(","]",")"]);
+  msg=["P$"+tmp+"$",[-2.2,1.2],20];
+  Putpoint("Q",[0,0]);
+  Msgsc=[];
+  Scorectr=1;
+  quesgiven=1;
+  quesnew=0;
+  tipsflag=0;
+  Ex=text(t);
+  tmp=[t,sin(t)];
+  Ca=Textformat([t,sin(t)],2);
+  [Ex,Ca,t,pt];
+);
+
+Scoring(Ca,pB):=(
+  regional(eps,stans,score,msg,tmp1,tmp2);
+  //global ScL
+  eps=10^(-1);
+  tmp1=Q.xy;
+  stans=Textformat(tmp1,2);
+  tmp2=parse(Ca);
+  score=-1;
+  if(|tmp1-tmp2|<eps,
+    score=1;
+    msg=["正解",pB,20,[0,0,0]];
+  ,
+    score=0;
+    msg=["不正解",pB,20,[1,0,0]];
+  );
+  PtL=append(PtL,tmp2);
+  ScL=append(ScL,score);
+  [stans,score,msg,ScL];
+);
+
+Drawgraph():=(
+  regional(tmp);
+  // global PtL
+  if(length(PtL)>1,
+    tmp=sort(PtL);
+    Ospline("1",tmp,["Color=red"]);
+  );
+);

@@ -1,0 +1,256 @@
+Rec=116;
+Seteditable(5,["y=","Size=30","Width=300"]);//no ketjs on
+//Seteditable(6,["-10","Size=16","Width=60"]);
+//Seteditable(7,["10","Size=16","Width=60"]);
+//Seteditable(8,["100","Size=16","Width=100"]);
+//Seteditable(9,["","Size=16","Width=100"]);
+//Seteditable(110,["","Size=16","Width=100"]);
+//Seteditable(111,["red","Size=16","Width=100"]);
+Seteditable(Rec,["","Size=18","Width=600"]);//no ketjs off
+
+dtxt(dtpos,no,data):=(
+ regional(tmp1,tmp2);
+ if(isstring(no),tmp1=no,tmp1=text(no));
+ if(isstring(data),tmp2=data,tmp2=text(data));
+ drawtext(dtpos,tmp1+":"+tmp2,size->15);
+);
+
+Dispoption(py,dy,sz):=(
+  //py=-2.8;dy=1.8;
+  drawtext([13.5,py],"$x=$",size->sz);
+  drawtext([18.3,py],",",size->sz);py=py-dy;
+  drawtext([13.5,py],"Num=",size->sz);py=py-dy;
+  drawtext([13.5,py],"Exc=",size->sz);py=py-dy;
+  drawtext([13.5,py],"Dis=",size->sz);py=py-dy;
+  drawtext([13.5,py],"Color=",size->sz);
+);
+
+Initinput():=(
+ Subsedit(5,"y=");
+ Subsedit(6,"-10");
+ Subsedit(7,"10");
+ Subsedit(8,"100");
+ Subsedit(9,"");
+ Subsedit(10,"");
+ Subsedit(11,"red");
+);
+
+Makefundata(fun):=(
+  regional(x1,x2,num,exc,dis,col);
+  x1=Textedit(6,"-10");
+  x2=Textedit(7,"10");
+  if((length(x1)>0)&(length(x2)>0),
+    x1=Tocindyform(x1);
+    x2=Tocindyform(x2);
+  );
+  num=Textedit(8,"100");
+  if(length(num)>0,
+    num="Num="+num;
+  );
+  exc=Textedit(9,"");
+  if(length(exc)>0,
+    if(indexof(exc,"(")==0,
+      if(indexof(exc,"[")==0,
+        exc="["+exc+"]";
+      );
+      exc=parse(exc);
+      exc=textformat(exc,6);
+      exc=replace(exc,"[[","[");
+      exc=replace(exc,"]]","]");
+    );
+    exc="Ex="+exc;
+  );
+  dis=Textedit(110,"");
+  if(length(dis)>0,
+    dis="Dis="+dis;
+  );
+  col=Textedit(111,"red");
+  if(length(col)>0,
+    col="Color="+col;
+  );
+  if(length(fun)>0,
+    tmp=[x1,x2,num,exc,dis,col];
+    tmp=text(tmp);
+    tmp=fun+"&"+substring(tmp,1,length(tmp)-1);
+    if(nf<=length(fL),
+      fL_nf=tmp;
+    ,
+      fL=concat(fL,[tmp]);
+    );
+  );
+);
+
+Funrngop(str):=(
+  regional(fun,ostr,rng,cst,tstr,x1,x2,op,rng,tmp);
+  fun="";rng="";op="";
+  tmp=Strsplit(str,"&");
+  if(length(tmp)>1,
+    fun=tmp_1;
+    ostr=tmp_2;
+    ostr=Replace(ostr," ","");
+    ostr=Strsplit(ostr,",");
+    x1=ostr_1; x2=ostr_2;
+    op=ostr_(3..(length(ostr)));
+    rng="";
+    if((length(x1)>0)&(length(x2)>0),
+      rng="=["+x1+","+x2+"]";
+    );
+  );
+  [fun,rng,op];
+);
+
+Dispfunrngop(n):=(
+  regional(fun,rng,op,x1,x2,num,exc,dis,col,tmp);
+  tmp=Funrngop(fL_n);
+  fun=tmp_1;
+  rng=tmp_2;
+  op=tmp_3;
+  rng=replace(rng,[["[",""],["]",""]]);
+  rng=Strsplit(rng,",");
+  x1=Tocindyform(rng_1);
+  x2=Tocindyform(rng_2);
+  tmp=Strsplit(op_1,"=");num=tmp_(-1);
+  tmp=Strsplit(op_2,"=");
+  if(length(tmp)>0,exc=tmp_(-1),exc="");
+  tmp=Strsplit(op_3,"=");
+  if(length(tmp)>0,dis=tmp_(-1),dis="");
+  tmp=Strsplit(op_4,"=");
+  if(length(tmp)>0,col=tmp_(-1),col="");
+  Subsedit(5,"y="+fun);
+  Subsedit(6,x1);
+  Subsedit(7,x2);
+  Subsedit(8,num);
+  Subsedit(9,exc);
+  Subsedit(110,dis);
+  Subsedit(111,col);
+);
+
+Key2fun():=(
+  regional(out);
+  out="";
+  forall(keyL,
+    out=out+#;
+  );
+  out;
+);
+
+Instr(key):=(
+  regional(out,tmp,tmp1);
+  out=key;
+  if(length(key)==2,
+    tmp=substring(key,0,1);
+    tmp1=substring(key,1,2);
+    if((tmp=="L")%(tmp=="n"),
+      out=tmp1;
+      if(capflg==1,
+        if((out>="a")&(out<="z"),
+          out=Toupper(out);
+        );
+      );
+    ,
+      out=key;
+    );
+  ,
+    if(key=="delete",Delete();out="");
+    if(key=="allclear",Allclear();out="");
+    if(key=="(SP)",out="(SP)");
+  );
+  out;
+);
+
+
+
+Delete():=(
+  regional(fstr);
+  if(length(keyL)>0,
+    keyL=keyL_(1..(length(keyL)-1))
+  );
+  fstr=Key2fun();
+  fL_nf=Makefundata(fstr);
+  Subsedit(5,"y="+fstr);
+  funflg=0;
+);
+
+Allclear():=(
+  fL_nf="";
+  keyL=[];
+  Subsedit(5,"y=");
+  funflg=0;
+);
+
+Newgraph():=(
+  fL=apply(1..10,"");
+  nf=1;
+  clrno=1;
+  keyL=[];
+  keyLL=[];
+  Initinput();
+  newgraphflg=0;
+);
+
+Addgraph():=(
+  nf=nf+1;
+  clrno=1;
+  keyLL=append(keyLL,keyL);
+  keyL=[];
+  Initinput();
+  addgraphflg=0;
+);
+
+Delgraph():=(
+  if(nf==1,
+    Newgraph();
+  ,
+    nf=nf-1;
+    forall((nf+1)..(length(fL)),
+      fL_#="";
+    );
+    keyLL=keyLL_(1..nf);
+    keyL=keyL_(-1);
+//    Dispfunrngop(nf);
+  );
+  delgraphflg=0;
+);
+
+Gridpaper():=(
+  regional(mv,tmp,tmp1);
+  mv=0.3;
+  Drwexpr([XMAX,-mv],"x",15);
+  Drwexpr([-mv,YMAX],"y",15);
+  draw([XMIN,0],[XMAX,0],color->[0,0,0]);
+  draw([0,YMIN],[0,YMAX],color->[0,0,0]);
+  tmp=[-2*pi,"-2\pi",-3*pi/2,"-\frac{3\pi}{2}"];
+  tmp=concat(tmp,[-pi,"-\pi",-pi/2,"-\frac{\pi}{2}"]);
+  tmp=concat(tmp,[pi,"\pi",pi/2,"\frac{\pi}{2}"]);
+  tmp=concat(tmp,[2*pi,"2\pi",3*pi/2,"\frac{3\pi}{2}"]);
+  Htickmark(tmp);
+  tmp=[-3,"-3",-2,"-2",-1,"-1"];
+  tmp=concat(tmp,[1,"1",2,"2",3,"3"]);
+  Vtickmark(tmp);
+);
+
+Keypanel():=(
+  regional(xL,yL,rL,tmp);
+  xL=prepend(8,apply(1..4,6));
+  yL=apply(1..6,6);
+  rL=[];
+  Tabledata("1",xL,yL,rL,[0,"Setwin=n","Move=[NE.x+0.4,SW.y]"]);
+  tmp=["c0r0","c4r0","c4r1","c5r1","c5r6","c0r6","c0r0"];
+  Tlistplot("t1",tmp,["nodisp"]);
+  tmp=["c4r0","c5r0","c5r1","c4r1","c4r0"];
+  Tlistplot("t2",tmp,["nodisp"]);
+  Shade(["sgt1"],["Color=yellow"]);
+  Shade(["sgt2"],["Color="+ClrL_clrno]);
+  Tabledata("2",xL,yL,rL,[0,"Setwin=n","Move=[NE.x+0.4,SW.y]"]);
+);
+
+fL=apply(1..10,"");
+nf=1;
+keyL=[];
+keyLL=[];
+newgraphflg=1;
+addgraphflg=0;
+delgraphflg=0;
+funflg=0;
+ClrL=["black","red","blue","green","gray"];
+clrno=1;
