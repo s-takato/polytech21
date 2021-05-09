@@ -3366,11 +3366,12 @@ Arrowdataseg(nm,ptlistorg,optionsorg):=(
 Ketcindyjsfigure=0;
 Ketcindyjsscale=1;
 
+setdirectory(Dircdy);
 Modifyfortex(str):=(
   regional(rep1L,rep2L,nn,tmp,tmp1,out);
-  rep1L=["(sp)","(cross)","(cdot)","(cir)","(neq)",
+  rep1L=["(sp)","(cross)","(cdot)","(deg)","(neq)",
          "(geq)","(leq)","(pm)","(mp)"];
-  rep2L=["\;","\times ","\cdot ","^{circ()}","\neq ",
+  rep2L=["\;","\times ","\cdot ","^{\circ} ","\neq ",
          "\geq ","\leq ","\pm ","\mp "];
   out=str;
   forall(1..(length(rep1L)),nn,
@@ -3614,7 +3615,6 @@ texflg=0;
 capflg=0;
 initpos=1;
 StrL=["","","",""];
-;
 </script>
 <script id="csdraw" type="text/x-cindyscript">
 Ketinit();
@@ -3702,7 +3702,8 @@ forall(1..(length(sL)),nn,
         tmp2=indexof(tmp1,"gr(");
         ctr=ctr+1;
       );
-      tmp1=replace(tmp1,"c i r c()","\circ"); //210425
+      tmp1=replace(tmp1,"c i r c","\circ"); //210425
+println([105,tmp1]);
       strt=strt+"$"+tmp1+"$";
     );
   );
@@ -3738,7 +3739,7 @@ var cdy = CindyJS({
   },
   angleUnit: "°",
   geometry: [
-    {name: "Text1", type: "EditableText", color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 1.0, minwidth: 800, textsize: 24.0, dock: {corner: "UL", offset: [145.0, -40.0]}},
+    {name: "Text1", type: "EditableText", pos: [3.8243902439024393, -4.0, -0.23779288220888373], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 1.0, minwidth: 800, textsize: 24.0},
     {name: "Text2", type: "EditableText", pos: [4.0, -3.3245248314029237, -0.24786974501589504], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 1.0, minwidth: 800, textsize: 24.0},
     {name: "Text3", type: "EditableText", pos: [4.0, -2.531013952685247, -0.2504349373246822], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 1.0, minwidth: 800, textsize: 24.0},
     {name: "SW", type: "Free", pos: [4.0, 3.4, -0.2], color: [1.0,1.0,1.0], labeled: false, size: 2.0, border:false },
@@ -3785,7 +3786,7 @@ var cdy = CindyJS({
     {name: "Text26", type: "Button", pos: [4.0, 3.3570169261470815, -0.344740917252686], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 0.0], fillalpha: 0.27272728085517883, text_fontfamily: "monospace", script: "funflg=1;\nname=\"Lg\";\n", text: "g", textsize: 18.0},
     {name: "Text23", type: "Button", pos: [-1.9771491397975647, -4.0, 0.25105585712817774], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 0.0], fillalpha: 0.27272728085517883, text_fontfamily: "monospace", script: "funflg=1;\nname=\"Ld\";\n", text: "d", textsize: 18.0},
     {name: "Text28", type: "Button", pos: [4.0, 3.4747474747474745, -0.4920154953320479], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 0.0], fillalpha: 0.27272728085517883, text_fontfamily: "monospace", script: "funflg=1;\nname=\"Li\";\n", text: "i", textsize: 18.0},
-    {name: "Text81", type: "Button", pos: [4.0, -1.9354838709677415, 0.12086733011879092], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 0.0], fillalpha: 0.27272728085517883, text_fontfamily: "monospace", script: "funflg=1;\nname=\"(cir)\";\n", text: "deg", textsize: 18.0},
+    {name: "Text81", type: "Button", pos: [4.0, -1.9354838709677415, 0.12086733011879092], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 0.0], fillalpha: 0.27272728085517883, text_fontfamily: "monospace", script: "funflg=1;\nname=\"(deg)\";\n", text: "deg", textsize: 18.0},
     {name: "Text84", type: "Button", pos: [3.8980891719745223, -4.0, 0.31025180915842515], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 0.0], fillalpha: 0.27272728085517883, script: "funflg=1;\nname=\"(cdot)\";\n", text: "・", textsize: 18.0},
     {name: "Text37", type: "Button", pos: [4.0, -2.253521126760563, 0.17151244379532657], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 0.0], fillalpha: 0.27272728085517883, text_fontfamily: "monospace", script: "funflg=1;\nname=\"Lr\";", text: "r", textsize: 18.0},
     {name: "Text27", type: "Button", pos: [-3.3057851239669422, -4.0, 0.40255813254440287], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 0.0], fillalpha: 0.27272728085517883, text_fontfamily: "monospace", script: "funflg=1;\nname=\"Lh\";\n", text: "h", textsize: 18.0},
@@ -3825,16 +3826,16 @@ var cdy = CindyJS({
     {name: "Text94", type: "Button", pos: [1.2783505154639174, -4.0, 0.2510800723601688], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 0.0], fillalpha: 1.0, text_fontfamily: "monospace", script: "funflg=1;\nname=\"(pm)\";", text: "+/-", textsize: 18.0},
     {name: "Text95", type: "Button", pos: [0.4536082474226804, -4.0, 0.2510800723601688], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 0.0], fillalpha: 1.0, text_fontfamily: "monospace", script: "funflg=1;\nname=\"(mp)\";", text: "-/+", textsize: 18.0},
     {name: "Text104", type: "ToggleButton", pos: [4.0, 0.7286836509518007, -0.20570682107686128], color: [0.0, 0.0, 0.0], fillcolor: [0.0, 1.0, 0.0], fillalpha: 0.5811965811965812, text_fontfamily: "monospace", script: "chno=4;\ninitpos=4;", text: "4", textsize: 18.0, border: true },
-    {name: "Text101", type: "Button", color: [0.0, 0.0, 0.0], fillcolor: [0.0, 1.0, 0.0], fillalpha: 0.42735042735042733, script: "chno=1;\ninitpos=1;", text: "1", textsize: 18.0, dock: {corner: "UL", offset: [103.0, -40.0]}},
+    {name: "Text101", type: "Button", pos: [4.0, -3.4936708860759493, -0.20568582638321167], color: [0.0, 0.0, 0.0], fillcolor: [0.0, 1.0, 0.0], fillalpha: 0.42735042735042733, script: "chno=1;\ninitpos=1;", text: "1", textsize: 18.0},
     {name: "Text102", type: "Button", pos: [4.0, -2.815981919487193, -0.20570682107686128], color: [0.0, 0.0, 0.0], fillcolor: [0.0, 1.0, 0.0], fillalpha: 0.4444444444444444, script: "chno=2;\ninitpos=2;", text: "2", textsize: 18.0},
     {name: "Text103", type: "Button", pos: [4.0, -2.1822369141525404, -0.20484241885130453], color: [0.0, 0.0, 0.0], fillcolor: [0.0, 1.0, 0.0], fillalpha: 0.452991452991453, script: "chno=3;\ninitpos=3;", text: "3", textsize: 18.0},
     {name: "Text92", type: "Button", pos: [4.0, 0.2582781456953643, 0.08070784909407477], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 0.0, 0.0], fillalpha: 0.5042735042735043, script: "funflg=1;\nAllclear();", text: "AC", textsize: 18.0}
   ],
   ports: [{
     id: "CSCanvas",
-    width: 1062,
-    height: 499,
-    transform: [{visibleRect: [-27.857815517301294, 20.472827604025547, 59.28504185935253, -20.472827604025547]}],
+    width: 1061,
+    height: 523,
+    transform: [{visibleRect: [-28.021926359818533, 23.426822769335843, 59.03887559557667, -19.488162548922112]}],
     axes: true,
     grid: 5.0,
     background: "rgb(247,247,247)"

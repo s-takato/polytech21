@@ -1,9 +1,8 @@
-
 Modifyfortex(str):=(
   regional(rep1L,rep2L,nn,tmp,tmp1,out);
-  rep1L=["(sp)","(cross)","(cdot)","(cir)","(neq)",
+  rep1L=["(sp)","(cross)","(cdot)","(deg)","(neq)",
          "(geq)","(leq)","(pm)","(mp)"];
-  rep2L=["\;","\times ","\cdot ","^{circ()}","\neq ",
+  rep2L=["\;","\times ","\cdot ","^{\circ} ","\neq ",
          "\geq ","\leq ","\pm ","\mp "];
   out=str;
   forall(1..(length(rep1L)),nn,
@@ -183,8 +182,8 @@ Instr(key):=(
         if((out>="a")&(out<="z"),
           out=Toupper(out);
         );
-        tmp=StrL_chno;
-        StrL_chno=substring(tmp,0,length(tmp)-3);
+//        tmp=StrL_chno;
+//        StrL_chno=substring(tmp,0,length(tmp)-3);
         capflg=0;
       );
     ,
