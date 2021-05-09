@@ -1,3 +1,10 @@
+//         20210510
+Seteditable(1,["","Size=24","Width=800"]); // no ketjs on
+Seteditable(2,["","Size=24","Width=800"]);
+Seteditable(3,["","Size=24","Width=800"]);
+Seteditable(4,["","Size=24","Width=840"]);
+//Seteditable(8,["","Size=24","Width=35"]);
+// no ketjs off
 Modifyfortex(str):=(
   regional(rep1L,rep2L,nn,tmp,tmp1,out);
   rep1L=["(sp)","(cross)","(cdot)","(deg)","(neq)",
@@ -224,6 +231,7 @@ Dispedit():=(
   forall([1,2,3,4],Subsedit(#,StrL_#));
 );
 
+// no ketjs on
 Delete():=(
   regional(tmp);
   tmp=StrL_chno;
@@ -235,6 +243,7 @@ Delete():=(
   Dispedit();
   funflg=0;
 );
+// no ketjs off
 
 Allclear():=(
   StrL_chno="";
