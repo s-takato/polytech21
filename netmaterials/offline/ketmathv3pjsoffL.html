@@ -3547,8 +3547,6 @@ Instr(key):=(
         if((out>="a")&(out<="z"),
           out=Toupper(out);
         );
-        tmp=StrL_chno;
-        StrL_chno=substring(tmp,0,length(tmp)-3);
         capflg=0;
       );
     ,
@@ -3641,29 +3639,28 @@ Circledata("1",[pos,0.5],["Num=20","Color=red","Msg=n"]);
 Shade(["cr1"],["Color=red"]);
 
 
-strL=[];
+StrL=[];
 forall([1,2,3,4],
-  strL=append(strL,Textedit(#,""));
+  StrL=append(StrL,Textedit(#,""));
 );
 
 
 if(initpos==1,
   npos=length(StrL_chno);
-  initpos=0;
+  initpos=npos;
 );
 
 if(funflg==1,
   str=Instr(name);
   tmp=StrL_chno;
-  tmp1=substring(tmp,0,npos);
-  tmp2=substring(tmp,npos,length(tmp));
-  StrL_chno=tmp1+str+tmp2;
-  npos=length(tmp1+str);
+  StrL_chno=tmp+str;
+  npos=length(tmp+str);
   funflg=0;
 );
 
 Dispedit();
 Dispposition();
+
 
 texstr="";
 sL=[];
@@ -3719,6 +3716,8 @@ yL=apply(1..4,30);
 Tabledata("1",xL,yL,[],[0,"Setwin=n","Move=[SW.x+3.5,SW.y]","nodisp"]);
 Tlistplot("t1",["c0r0","c20r0","c20r4","c0r4","c0r0"],["nodisp"]);
 Shade(["sgt1"],["Color=yellow"]);
+
+
 
 
 
@@ -3833,9 +3832,10 @@ var cdy = CindyJS({
   ],
   ports: [{
     id: "CSCanvas",
-    width: 1060,
-    height: 485,
-    transform: [{visibleRect: [-27.857815517301294, 20.472827604025547, 59.12093101683529, -19.324051706404873]}],
+    width: 1062,
+    height: 499,
+    transform: [{visibleRect: [-27.857815517301294, 20.472827604025547, 59.28504185935253, -20.472827604025547]}],
+    axes: true,
     grid: 5.0,
     background: "rgb(247,247,247)"
   }],
