@@ -1,0 +1,19 @@
+mf(x,t):=(
+  regional(pC,pP,pQ,pR,eps,tmp,tmp1);
+  pC=[-1,0];
+  eps=0.1;
+  pP=[cos(x),sin(x)]+pC;
+  Listplot("m1",[pC,pP],["Color=blue","Msg=n"]);
+  Anglemark("m12",[[0,0],pC,pP],["E=x","Msg=n"]);
+  pQ=[cos(x-t),sin(x-t)]+pC;
+  pR=pQ+[-t*sin(x-t),t*cos(x-t)];
+  if(t<x,
+    Partcrv("1",pC,pP,"crf",["Color=red","Msg=n"]);
+    Listplot("t1",[pQ,pR],["Color=red","dr,2","Msg=n"]);
+  ,
+    tmp=t-x;
+    if(t<=x+pi/2,
+      Listplot("t1",[[0,0],x*[sin(tmp),cos(tmp)]],["Color=red","dr,2","Msg=n"]);
+    );
+  );
+ );
