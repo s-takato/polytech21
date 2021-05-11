@@ -8,7 +8,8 @@ mf(x,t):=(
   pQ=[cos(x-t),sin(x-t)]+pC;
   pR=pQ+[-t*sin(x-t),t*cos(x-t)];
   if(t<x,
-    Partcrv("1",pC,pP,"crf",["Color=red","Msg=n"]);
+    tmp=Paramoncurve(pP,"crf");
+    Partcrv("1",1,tmp,"crf",["Color=red","Msg=n"]);
     Listplot("t1",[pQ,pR],["Color=red","dr,2","Msg=n"]);
   ,
     tmp=t-x;

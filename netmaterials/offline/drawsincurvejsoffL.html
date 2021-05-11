@@ -661,6 +661,103 @@ Expr(listorg,options):=( //16.10.09
   );
   Letter(list,options);
 );
+Paramoncurve(point,Gdata):=(
+  regional(Tmp,PtL,pP);
+  if(ispoint(point),pP=point.xy,pP=point);
+  if(isstring(Gdata),PtL=parse(Gdata),PtL=Gdata);
+  Tmp=Nearestpt(pP,PtL);
+  Tmp_2;
+);
+Paramoncurve(pP,nN,plist):=(
+  regional(PtL,Out,Pa,Pb,vV,vW,sS);
+  if(isstring(plist),PtL=parse(plist),PtL=plist);
+  PtL=apply(PtL,LLcrd(#));//16.10.16
+  if(nN==length(PtL),
+    Out=nN;
+  ,
+    Pa=PtL_nN;
+    Pb=PtL_(nN+1);
+    vV=Pb-Pa;
+    vW=pP-Pa;
+    sS=vV*vW/|vV|^2;
+    sS=min([max([sS,0]),1]);
+    Out=nN+sS;
+  );
+  Out;
+);
+Nearestpt(pt,plotstr):=(
+  regional(ptL,Eps,dtL,dt,nn,pt1,pt2,dv,nv,tmp,tmp1,tmp2);
+  if(isstring(plotstr),ptL=parse(plotstr),ptL=plotstr);
+  Eps=10^(-6);
+  dtL=[];
+  forall(1..(length(ptL)-1),nn,
+    pt1=ptL_nn;
+    pt2=ptL_(nn+1);
+    if(|pt2-pt1|<Eps,
+      dt=[pt1,nn,|pt1-pt|];
+    ,
+      dv=pt2-pt1;
+      nv=[-dv_2,dv_1];
+      tmp1=Intersectline(pt1,dv,pt,nv);
+      if(length(tmp1)>1, //210319from
+        if((tmp1_2>=0)&(tmp1_2<=1),
+          dt=[tmp1_1,nn+tmp1_2,|tmp1_1-pt|];
+        ,
+          if(tmp1_2<0,
+            dt=[pt1,nn,|pt1-pt|];
+          ,
+            dt=[pt2,nn+1,|pt2-pt|];
+          );
+        );
+      ,
+      ); //210319to
+    );
+    dtL=append(dtL,dt);
+  );
+  dtL=sort(dtL,[#_3,#_2]);
+  dtL_1;
+);
+Intersectline(p1,v1,p2,v2):=(
+  regional(Eps,d,dt,ds,t,s,pt,out,tmp,tmp1,tmp2,tmp3);
+  Eps=10^(-5);
+  out=[];
+  tmp=Dotprod(v1,v2);
+  tmp1=[tmp,|v1|^2];
+  tmp2=[-|v2|^2,-tmp];
+  tmp3=[Dotprod(p2-p1,v2),Dotprod(p2-p1,v1)];
+  d=Crossprod(tmp1,tmp2);
+  tmp=abs(Crossprod(v1,v2));
+  if(tmp>Eps,
+    dt=Crossprod(tmp3,tmp2);
+    ds=Crossprod(tmp1,tmp3);
+    t=dt/d;
+    s=ds/d;
+    pt=p1+v1*t;
+    out=[pt,t,s];
+  ,
+    tmp1=Crossprod(p2-p1,v1)/|v1|; //18.01.05
+    out=[abs(tmp1)]; //18.01.05
+  );
+  out;
+);
+Dotprod(vec1,vec2):=(
+  regional(v1,v2,tmp);
+  if(ispoint(vec1),v1=vec1.xy,v1=vec1);
+  if(ispoint(vec2),v2=vec2.xy,v2=vec2);
+  v1*v2;
+);
+Crossprod(a,b):=(
+  regional(tmp1,tmp2,tmp3,Out);
+  if(length(a)==3,
+    tmp1=a_2*b_3-a_3*b_2;
+    tmp2=a_3*b_1-a_1*b_3;
+    tmp3=a_1*b_2-a_2*b_1;
+    Out=[tmp1,tmp2,tmp3];
+  ,
+    Out=a_1*b_2-a_2*b_1;
+  );
+  Out;
+);
 Partcrv(nm,pA,pB,PkLstr):=Partcrv(nm,pA,pB,PkLstr,[]);
 Partcrv(nm,pAorg,pBorg,PkLstr,options):=(
   regional(pA,pB,PkL,PkLL,Ans,Eps,Npt,Out1,Out2,tmp,tmp1,tmp2,Flg,nS,nE,
@@ -892,79 +989,6 @@ Joincrvs(nm,plotstrL,options):=(
     GCLIST=append(GCLIST,[name,Ltype,opcindy]);
   );
   PtL;
-);
-Nearestpt(pt,plotstr):=(
-  regional(ptL,Eps,dtL,dt,nn,pt1,pt2,dv,nv,tmp,tmp1,tmp2);
-  if(isstring(plotstr),ptL=parse(plotstr),ptL=plotstr);
-  Eps=10^(-6);
-  dtL=[];
-  forall(1..(length(ptL)-1),nn,
-    pt1=ptL_nn;
-    pt2=ptL_(nn+1);
-    if(|pt2-pt1|<Eps,
-      dt=[pt1,nn,|pt1-pt|];
-    ,
-      dv=pt2-pt1;
-      nv=[-dv_2,dv_1];
-      tmp1=Intersectline(pt1,dv,pt,nv);
-      if(length(tmp1)>1, //210319from
-        if((tmp1_2>=0)&(tmp1_2<=1),
-          dt=[tmp1_1,nn+tmp1_2,|tmp1_1-pt|];
-        ,
-          if(tmp1_2<0,
-            dt=[pt1,nn,|pt1-pt|];
-          ,
-            dt=[pt2,nn+1,|pt2-pt|];
-          );
-        );
-      ,
-      ); //210319to
-    );
-    dtL=append(dtL,dt);
-  );
-  dtL=sort(dtL,[#_3,#_2]);
-  dtL_1;
-);
-Intersectline(p1,v1,p2,v2):=(
-  regional(Eps,d,dt,ds,t,s,pt,out,tmp,tmp1,tmp2,tmp3);
-  Eps=10^(-5);
-  out=[];
-  tmp=Dotprod(v1,v2);
-  tmp1=[tmp,|v1|^2];
-  tmp2=[-|v2|^2,-tmp];
-  tmp3=[Dotprod(p2-p1,v2),Dotprod(p2-p1,v1)];
-  d=Crossprod(tmp1,tmp2);
-  tmp=abs(Crossprod(v1,v2));
-  if(tmp>Eps,
-    dt=Crossprod(tmp3,tmp2);
-    ds=Crossprod(tmp1,tmp3);
-    t=dt/d;
-    s=ds/d;
-    pt=p1+v1*t;
-    out=[pt,t,s];
-  ,
-    tmp1=Crossprod(p2-p1,v1)/|v1|; //18.01.05
-    out=[abs(tmp1)]; //18.01.05
-  );
-  out;
-);
-Dotprod(vec1,vec2):=(
-  regional(v1,v2,tmp);
-  if(ispoint(vec1),v1=vec1.xy,v1=vec1);
-  if(ispoint(vec2),v2=vec2.xy,v2=vec2);
-  v1*v2;
-);
-Crossprod(a,b):=(
-  regional(tmp1,tmp2,tmp3,Out);
-  if(length(a)==3,
-    tmp1=a_2*b_3-a_3*b_2;
-    tmp2=a_3*b_1-a_1*b_3;
-    tmp3=a_1*b_2-a_2*b_1;
-    Out=[tmp1,tmp2,tmp3];
-  ,
-    Out=a_1*b_2-a_2*b_1;
-  );
-  Out;
 );
 Lcrd(pt):=(
   regional(tmp);
@@ -2133,7 +2157,8 @@ mf(x,t):=(
   pQ=[cos(x-t),sin(x-t)]+pC;
   pR=pQ+[-t*sin(x-t),t*cos(x-t)];
   if(t<x,
-    Partcrv("1",pC,pP,"crf",["Color=red","Msg=n"]);
+    tmp=Paramoncurve(pP,"crf");
+    Partcrv("1",1,tmp,"crf",["Color=red","Msg=n"]);
     Listplot("t1",[pQ,pR],["Color=red","dr,2","Msg=n"]);
   ,
     tmp=t-x;
@@ -2152,7 +2177,6 @@ graphflg=0;
 </script>
 <script id="csdraw" type="text/x-cindyscript">
 Ketinit();
-
 
 Setwindow([-2.5,6.5],[-3.2,3.2]);
 Setax([7,"se"]);
@@ -2220,13 +2244,12 @@ var cdy = CindyJS({
   ports: [{
     id: "CSCanvas",
     width: 916,
-    height: 627,
-    transform: [{visibleRect: [-3.987208642042248, 4.188922401336122, 8.330778258837007, -4.242712737147822]}],
+    height: 611,
+    transform: [{visibleRect: [-3.987208642042248, 4.188922401336122, 8.330778258837007, -4.027551393901023]}],
     grid: 1.0,
     background: "rgb(247,247,247)"
   }],
   csconsole: false,
-  use: ["katex"],
   cinderella: {build: 2006, version: [3, 0, 2006]}
 });
     </script>
