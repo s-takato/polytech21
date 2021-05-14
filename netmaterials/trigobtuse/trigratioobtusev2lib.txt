@@ -130,3 +130,20 @@ Delete():=(
 Allclear():=(
   Subsedit(ch,"");
 );
+
+Keytable():=(
+  regional(xL,yL,op1,tmp,op2);
+  xL=apply(1..6,7);
+  yL=apply(1..4,7);
+  op1=[0,"Setwin=n","Move=[1.2,-1]"];
+  Tabledata("1",xL,yL,[],prepend("nodisp",op1));
+  tmp=["c0r0","c6r0","c6r1","c5r1","c5r4","c0r4","c0r0"];
+  op2=["nodisp"];
+  Tlistplot("1",tmp,op2);
+  Shade(["sg1"],["Color=1*[0,0,1,0]"]);
+  Tlistplot("2",["c5r1","c6r1","c6r3","c5r3","c5r1"],op2);
+  Shade(["sg2"],["Color=0.5*[1,1,0,0]"]);
+  Tlistplot("3",["c5r3","c6r3","c6r4","c5r4","c5r3"],op);
+  Shade(["sg3"],["Color=1*[1,0,0]"]);
+  Tabledata("2",xL,yL,[],op1);
+);
