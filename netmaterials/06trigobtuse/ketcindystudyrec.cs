@@ -1,4 +1,4 @@
-// LIbrary for net materials   20200507
+// LIbrary for net materials   20200512
 
 // グローバル変数
 // LogData　学習のログデータ
@@ -43,6 +43,7 @@ QuesNo=0;
 StartTime=0;
 
 newflg=1;
+confirmflg=0;
 quesflg=0;
 scoreflg=0;
 scorefin=0;
@@ -54,16 +55,17 @@ Msgnew=[];
 Msgques=[];
 Msgsc=[];
 
-Confirmstudent(st,Students):=(
-  regional(numL,nsL,nn,kk,nstr,conf,tmp,tmp1);
+Confirmstudent(st,students):=(
+  regional(numL,nsL,nn,kk,nstr,out,tmp,tmp1);
   numL=apply(0..9,text(#));
+  out="";
   nsL=[];
-  forall(1..(length(Students)),nn,
-    tmp1=Students_nn;
+  forall(1..(length(students)),nn,
+    tmp1=students_nn;
     nstr="";
     kk=1;
     while(kk<=length(tmp1),
-      tmp=st_(kk);
+      tmp=tmp1_(kk);
       if(contains(numL,tmp),
         nstr=nstr+tmp;
         kk=kk+1;
@@ -88,11 +90,11 @@ Confirmstudent(st,Students):=(
   if(contains(nsL,nn),
     tmp=select(1..(length(nsL)),nsL_#==nn);
     tmp=tmp_1;
-    conf=Studentls_tmp;
+    out=students_tmp;
   ,
-    conf="";
+    out="";
   );
-  conf;
+  out;
 );
 
 Newsession(editno,pos):=Newsession(editno,"",pos,18,[]);
@@ -111,32 +113,25 @@ Newsession(editno,Arg1,Arg2,Arg3):=(
   );  
 );
 Newsession(editno,noinput,pos,size,studentL):=(
-  regional(st,tmp,conf,ctr,msg);
-  // global Msgnew
-  conf="ok";
+  regional(st,msg);
   if(newflg==1,
     st=Textedit(editno,noinput);
     if(length(st)==0,
-       conf="no";
+       st="";
        msg=["IDを入力",pos,size,[0,0,1]];
     ,
       if(length(studentL)>0,
-        conf=Confirmstudent(st,StudentL);
-        if(length(conf)>0,
-          st=conf;
+        st=Confirmstudent(st,studentL);
+        if(length(st)>0,
+          msg=["確認",pos,size,[0,0,1]];
           Subsedit(editno,"ID="+st);
-          conf="ok";
         ,
           msg=["ID未確認",pos,size,[1,0,0]];
-          oonf="unknown";
         );
       );
     );
   );
-  if(conf=="ok",
-    msg=["確認",pos,size,[0,0,1]];
-  );
-  msg;
+  [msg,st];
 );
 
 Startlearning(editno):=(
@@ -222,102 +217,6 @@ Dispquesno(pos,size,rgb):=(
   msg;
 );
 
-Displetters(msgLorg):=(
-  regional(msgL,pos,str,size,color);
-  msgL=msgLorg;
-  if(length(msgL)>0,
-    if(isstring(msgL_1),msgL=[msgL]);
-    forall(msgL,
-      pos=#_2;
-      str=#_1;
-      if(length(#)>2,size=#_3,size=16);
-      if(length(#)>3,color=#_4,color=[0,0,0]); 
-      drawtext(pos,str,size->size,color->color);
-    );
-  );
-);
-
-Dispexprs(msgLorg):=(
-  regional(msgL,pos,str,size,color);
-  msgL=msgLorg;
-  if(length(msgL)>0,
-    if(isstring(msgL_1),msgL=[msgL]);
-    forall(msgL,
-      pos=#_2;
-      str="$"+#_1+"$";
-      if(length(#)>2,size=#_3,size=16);
-      if(length(#)>3,color=#_4,color=[0,0,0]);    
-      drawtext(pos,str,size->size,color->color);
-    );
-  );
-);
-
-Displetterlist(list):=(
-  forall(list,
-    Displetters(#);
-  );
-);
-
-Dispexprlist(list):=(
-  forall(list,
-    Dispexprs(#);
-  );
-);
-
-Log2csv(dt):=(
-  regional(cL,dL,out,nn,tmp,tmp1,tmp2);
-  cL=[];
-  dL=tokenize(dt,"||");
-  tmp=dL_1;
-  tmp1=tokenize(tmp,";;");
-  tmp=Returndatetime(tmp1_2);
-  out=tmp1_1+","+tmp_1+","+tmp_2;
-  forall(2..(length(dL)),nn,
-    tmp1=tokenize(dL_nn,";;");
-    tmp2=text(tmp1_1)+",";
-    forall(2..(length(tmp1)),
-      tmp=tmp1_#;
-      if(!isstring(tmp),tmp=text(tmp));
-      if(indexof(tmp,",")>0,tmp=Dqq(tmp));
-      tmp2=tmp2+tmp;
-      if(#<length(tmp1),tmp2=tmp2+",");
-    );
-    out=out+","+tmp2;
-  );
-  out;
-);
-
-Csvtext():=Csvtext("alltext");
-Csvtext(fname):=(
-  regional(tmp,tmp1,tL,numL,tnL,fid);
-  tmp=allelements();
-  tmp1=allpoints();
-  tL=remove(tmp,tmp1);
-  numL=apply(tL,replace(#.name,"Text",""));
-  numL=apply(numL,replace(#,"''",".2"));
-  numL=apply(numL,replace(#,"'",".1"));
-  numL=apply(numL,if(length(#)==0,"-1",#));
-  numL=apply(numL,parse(#));
-  tnL=apply(1..(length(numL)),
-     [numL_#,inspect(tL_#,"name"),inspect(tL_#,"text.text")]);
-  tnL=sort(tnL,[#_1]);
-  fid=openfile(fname+".csv");
-  forall(tnL,
-   println(fid,#_1+","+#_2+","+#_3);
-  );
-  closefile(fid);
-  println("generate "+fname+".csv");
-);
-
-Getcurtime():=Getcurtime(date(),time());
-Getcurtime(ymd,hms):=(
-  regional(out,tmp,tmp1);
-  out=text(ymd_1*10000+ymd_2*100+ymd_3);
-  tmp=text(hms_1*3600+hms_2*60+hms_3);
-  tmp1=substring("0000000",0,5-length(tmp));
-  out=out+tmp1+tmp;
-  out;
-);
 
 Counttime():=(
   regional(tmp,tmp1);

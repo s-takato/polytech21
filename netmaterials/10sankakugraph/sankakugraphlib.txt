@@ -1,5 +1,5 @@
 Rec=116;
-Seteditable(5,["y=","Size=30","Width=300"]);//no ketjs on
+Seteditable(5,["y=","Size=24","Width=600"]);//no ketjs on
 //Seteditable(6,["-10","Size=16","Width=60"]);
 //Seteditable(7,["10","Size=16","Width=60"]);
 //Seteditable(8,["100","Size=16","Width=100"]);
