@@ -3374,10 +3374,10 @@ Arrowdataseg(nm,ptlistorg,optionsorg):=(
   ArrowheadNumber=ArrowheadNumber+1;
   if(Noflg<2,
     if(lineflg==1,
-      Listplot("-arh"+nm,[tmp1,pP,tmp2],append(options,"Msg=n")); //191106
+      Listplot("-ar"+nm+"h",[tmp1,pP,tmp2],append(options,"Msg=n")); //210522
     ,
-      Listplot("-arh"+nm,[tmp1,pP,tmp2,pC,tmp1],["dr,0.1","Color="+color,"Msg=n"]); //191106
-    fillpoly(parse("arh"+nm),color->color); // 
+      Listplot("-ar"+nm+"h",[tmp1,pP,tmp2,pC,tmp1],["dr,0.1","Color="+color,"Msg=n"]); //210522
+    fillpoly(parse("ar"+nm+"h"),color->color); // 
     );
     if(lineflg==0,
       if(segpos==1,pB=pC); //191202
@@ -3760,12 +3760,13 @@ Shade(["cr1"],["Color=red"]);
 
 StrL=[];
 forall([1,2,3,4],
-  tmp=Textedit(#,"");
+  tmp=Textedit(#,"","");
   StrL=append(StrL,tmp);
-  npos=npos+(length(tmp)-length(strnow));
-  strnow=tmp;
+  if(chno==#,
+    npos=npos+(length(tmp)-length(strnow));
+    strnow=tmp;
+  );
 );
-
 
 if(initflg==1,
   strnow=StrL_chno;
