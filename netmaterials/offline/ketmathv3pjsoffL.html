@@ -2023,7 +2023,9 @@ Enclosing2(nm,plistorg,options):=(
     println("generate Enclosing "+name);
     tmp=name+"="+Textformat(AnsL,10)+";"; //190415
     parse(tmp);
-    Listplot("-"+name,parse(name),["nodisp"]); //210421
+    tmp=parse(name); //210530[2lines]
+    tmp=apply(tmp,LLcrd(#));
+    Listplot("-"+name,tmp,["nodisp"]); //210421
   );
   if(Noflg<3, //190818
     if(isstring(Ltype),
@@ -3396,8 +3398,8 @@ Modifyfortex(str):=(
   regional(rep1L,rep2L,nn,tmp,tmp1,out);
   rep1L=["(sp)","(cross)","(cdot)","(deg)","(neq)",
          "(geq)","(leq)","(pm)","(mp)"];
-  rep2L=["\;","\times ","\cdot ","^{\circ} ","\neq ",
-         "\geq ","\leq ","\pm ","\mp "];
+  rep2L=["\;","{\times} ","{\cdot} ","^{\circ} ","{\neq} ",
+         "{\geq} ","{\leq} ","{\pm} ","{\mp} "];
   out=str;
   forall(1..(length(rep1L)),nn,
     out=replace(out,rep1L_nn,rep2L_nn);
@@ -3909,9 +3911,9 @@ var cdy = CindyJS({
   ],
   ports: [{
     id: "CSCanvas",
-    width: 1078,
-    height: 514,
-    transform: [{visibleRect: [-24.620356169461218, 21.509709745384466, 63.83538794733052, -20.666776781545913]}],
+    width: 1058,
+    height: 517,
+    transform: [{visibleRect: [-24.575598666956516, 21.457492659128977, 62.23903702466283, -20.96516013157726]}],
     grid: 10.0,
     background: "rgb(247,247,247)"
   }],

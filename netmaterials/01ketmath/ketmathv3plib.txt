@@ -4,8 +4,8 @@ Modifyfortex(str):=(
   regional(rep1L,rep2L,nn,tmp,tmp1,out);
   rep1L=["(sp)","(cross)","(cdot)","(deg)","(neq)",
          "(geq)","(leq)","(pm)","(mp)"];
-  rep2L=["\;","\times ","\cdot ","^{\circ} ","\neq ",
-         "\geq ","\leq ","\pm ","\mp "];
+  rep2L=["\;","{\times} ","{\cdot} ","^{\circ} ","{\neq} ",
+         "{\geq} ","{\leq} ","{\pm} ","{\mp} "];
   out=str;
   forall(1..(length(rep1L)),nn,
     out=replace(out,rep1L_nn,rep2L_nn);
