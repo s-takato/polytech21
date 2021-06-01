@@ -1778,8 +1778,9 @@ Ketinit();
  Htickmark([1,"1",tmp_1,format(C.x,2)]);
  Vtickmark([pA_2,format(pA_2,2),pB_2,format(pB_2,2)]);
  Expr([3.2,4],"e","r=\dfrac{b^2-1}{b-1}",["Size=1.5"]);
- tmp=re((pB_2-pA_2)/(pB_1-pA_1));
- Expr([3.2,3],"e","r="+format(tmp,4),["Size=1.5"]);
+ tmp1=Assign("r=\dfrac{b^2-1}{b-1}=",["b",format(pB_1,2)]);
+ tmp2=format(re((pB_2-pA_2)/(pB_1-pA_1)),4);
+ Expr([3.2,3],"e",tmp1+tmp2,["Size=1.5"]);
  Expr([sqrt(5),5],"e","y=x^2",["Size=1.5"]);
  Expr(C,"n1","b",["Size=1.5"]);
 
@@ -1805,8 +1806,8 @@ var cdy = CindyJS({
   ports: [{
     id: "CSCanvas",
     width: 717,
-    height: 487,
-    transform: [{visibleRect: [-2.7335201691999913, 5.699821861324556, 6.803871370052533, -0.7781553766335741]}],
+    height: 471,
+    transform: [{visibleRect: [-2.7335201691999913, 5.699821861324556, 6.803871370052533, -0.5653265556739641]}],
     grid: 1.0,
     snap: true,
     background: "rgb(247,247,247)"
