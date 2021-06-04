@@ -1,0 +1,20 @@
+//         20210602
+
+nch=3;
+ch=3;
+posyL=[17.3,14,-3];
+px=-15;
+nt=5;
+tposL=apply(1..nt,[px,11-2.6*(#-1)]);
+
+//  only for kemath
+
+ // no ketjs on 
+Seteditable(1,["","Size=24","Width=900"]);
+Seteditable(2,["","Size=24","Width=900"]);
+Seteditable(3,["","Size=24","Width=900"]);
+//Seteditable(4,["","Size=24","Width=900"]);
+// no ketjs off
+
+
+
