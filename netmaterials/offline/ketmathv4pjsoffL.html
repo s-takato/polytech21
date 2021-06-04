@@ -3264,9 +3264,10 @@ forall(1..nch,nn,
 );
 sL=select(sL,length(#)>0);
 ns=length(sL);
+
 forall(1..(length(sL)),nn,
   strt=Gettexform(sL_nn);
-  Drwletter(tposL_(nt-ns+1),strt,20);
+  Drwletter(tposL_(nt-ns+nn),strt,20);
   texstr=texstr+strt;
 );
 
@@ -3384,8 +3385,8 @@ var cdy = CindyJS({
   ports: [{
     id: "CSCanvas",
     width: 1055,
-    height: 515,
-    transform: [{visibleRect: [-24.575598666956516, 21.457492659128977, 61.99287076088697, -20.80104928906002]}],
+    height: 518,
+    transform: [{visibleRect: [-24.575598666956516, 21.457492659128977, 61.99287076088697, -21.04721555283588]}],
     grid: 5.0,
     background: "rgb(247,247,247)"
   }],
