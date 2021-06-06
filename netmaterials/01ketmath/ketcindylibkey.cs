@@ -14,8 +14,9 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>
 //
 
-println("ketcindylibforjs[20210604] loaded");
+println("ketcindylibkey[20210606] loaded");
 
+// 210606 Replacematdet,Extractvar added
 // 210604 Replacefun, Morefunctions added
 //              Modifyfortex changed ( (inf) added )
 // 210515 start
@@ -35,8 +36,8 @@ Modifyfortex(str):=(
   regional(rep1L,rep2L,nn,tmp,tmp1,out);
   rep1L=["(sp)","(cross)","(cdot)","(deg)","(neq)",
          "(geq)","(leq)","(pm)","(mp)","(inf)"];
-  rep2L=["\;","\times ","\cdot ","^{\circ} ","\neq ",
-         "\geq ","\leq ","\pm ","\mp ","\infty "];
+  rep2L=["\;","{\times}\,","{\cdot}\,","^{\circ}\,","{\neq}\,",
+         "{\geq}\,","{\leq}\,","{\pm}\,","{\mp}\,","{\infty}\,"];
   out=str;
   forall(1..(length(rep1L)),nn,
     out=replace(out,rep1L_nn,rep2L_nn);
@@ -91,6 +92,91 @@ Replacefun(str,name,repL):=(  //new 210604
   out;
 );
 
+Extractvar(strorg):=Extractvar(strorg,",");
+Extractvar(strorg,mark):=(
+  regional(out,parL,str,cma,nc,first,last,
+     tmp,tmp1,tmp2);
+  str=strorg;
+  out=[];
+  first=0; last=0;
+  parL=Bracket(str,"()");
+  tmp1=select(parL,#_2==1);
+  tmp2=select(parL,#_2==-1);
+  if(length(tmp1)*length(tmp2)>0,
+    first=tmp1_1_1;
+    last=tmp2_1_1;
+    str=substring(str,0,last);
+    cma=Indexall(str,mark);
+    parL=select(parL,#_1<=last);
+    if(length(cma)==0,
+      out=[substring(str,first,last-1)];
+    ,
+      tmp1=first;
+      forall(1..(length(cma)),nc,
+        tmp=select(parL,#_1<cma_nc);
+        tmp=tmp_(-1)_2;
+        if(tmp>0,tmp=tmp,tmp=-tmp-1);
+        if(tmp==1,
+          tmp2=cma_(nc)-1;
+          out=append(out,substring(str,tmp1,tmp2));
+          tmp1=tmp2+1;
+          if(nc==length(cma),
+            out=append(out,substring(str,tmp1,length(str)-1));
+          );
+        );
+      );
+    );
+  );
+  [first,last,out];
+);
+
+Replacematdet(str):=(
+  regional(sym,out,rest,ctr,eL,np,nc,tmp,tmp1,tmp2,tmp3);
+  out=str;
+  forall(["mat(","det("],sym,
+    tmp=indexof(out,sym);
+    ctr=0;
+    while((tmp>0)&(ctr<20),
+      rest=substring(out,tmp-1,length(out));
+      out=substring(out,0,tmp-1);
+      tmp1=Bracket(rest,"()");
+      tmp1=select(tmp1,#_2==-1);
+      if(length(tmp1)>0,tmp1=tmp1_1_1,tmp1=length(rest));
+      tmp2=substring(rest,0,tmp1);
+      rest=substring(rest,tmp1,length(rest));
+      eL=Extractvar(tmp2,";");
+      tmp3=eL_3;
+      forall(1..(length(tmp3)),np,
+        tmp=tmp3_np;
+        tmp1=Getlevel(tmp);
+        tmp1=select(tmp1,#_2==0);
+        tmp1=apply(tmp1,#_1);
+        nc=length(tmp1)+1;
+        forall(tmp1,
+          tmp_#="&";
+        );
+        tmp3_np=tmp;
+      );
+      tmp2="\begin{array}{";
+      forall(1..nc,tmp2=tmp2+"c");
+      tmp2=tmp2+"}";
+      forall(tmp3,tmp2=tmp2+#+"\\");
+      tmp2=substring(tmp2,0,length(tmp2)-2);
+      tmp2=tmp2+"\end{array}";
+      if(sym=="mat(",
+        tmp2="\left("+tmp2+"\right)";
+      );
+      if(sym=="det(",
+        tmp2="\left|"+tmp2+"\right|";
+      );
+      out=out+tmp2+rest;
+      tmp=indexof(out,sym);
+      ctr=ctr+1;      
+    );
+  );
+  out;
+);
+
 Morefunction(str):=( //new 210604
   regional(out,name,repL);
   out=str;
@@ -98,6 +184,8 @@ Morefunction(str):=( //new 210604
   out=Replacefun(out,"lim(",["\displaystyle\lim_{","\to\,","}",""]);
   out=Replacefun(out,"int(",["\displaystyle\int_{","}^{","}","\,d"," "]);
   out=Replacefun(out,"int(",["\displaystyle\int\,","\,d"," "]);
+  out=Replacefun(out,"sum(",["\displaystyle\sum_{","}^{","}{","}"]); //210606
+  out=Replacematdet(out); //210606
   out;
 );
 
@@ -352,6 +440,8 @@ Gettexform(str):=(
       tmp=Morefunction(tmp);
       tmp=Addasterisk(tmp);
       tmp1=Totexform(tmp);
+      tmp1=replace(tmp1,"a r r a y","array"); //210606[2lines]
+      repeat(5,tmp1=replace(tmp1,"c c","cc"));
       tmp1=replace(tmp1,"c i r c","\circ");
       tmp1=replace(tmp1,"\frac","\dfrac");
       tmp1=Greekletter(tmp1); //210514[3lines]

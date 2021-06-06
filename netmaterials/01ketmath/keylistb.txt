@@ -126,6 +126,8 @@ Text69
 funflg=1;name="\";
 Text70
 funflg=1;name="]";
+Text71
+funflg=1;name="mat(";
 Text72
 funflg=1;name="_";
 Text73
@@ -136,6 +138,8 @@ Text75
 funflg=1;name="|";
 Text76
 funflg=1;name="pi";
+Text77
+funflg=1;name="det(";
 Text78
 funflg=1;name="gr(";
 Text79
@@ -176,6 +180,8 @@ Text97
 funflg=1;name="int(";
 Text98
 funflg=1;name="tfr(";
+Text99
+funflg=1;name="sum(";
 Text101
 ch=1;initflg=1;
 Text102
