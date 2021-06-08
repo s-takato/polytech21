@@ -3301,10 +3301,28 @@ tposL=apply(1..nt,[px,11-2.6*(#-1)]);
 
 
 
+
+startflg=1;
 </script>
 <script id="csdraw" type="text/x-cindyscript">
 Ketinit();
 
+
+
+if(startflg==1,
+  forall(1..(length(tposL)),
+    tmp="T"+text(#);
+    Putpoint(tmp,tposL_#);
+    inspect(parse(tmp),"ptsize",3);
+    inspect(parse(tmp),"color",1);
+  );
+  startflg=0;
+,
+  forall(1..(length(tposL)),
+    tmp="T"+text(#);
+    Putpoint(tmp,tposL_#,parse(tmp+".xy"));
+  );
+);
 
 
 Setwindow([-20,50],[-17,15]);
@@ -3350,21 +3368,23 @@ texstr="";
 sL=[];
 forall(1..nch,nn,
   tmp=StrL_nn;
-  tmp1=tokenize(tmp,"//");
-  tmp1=apply(tmp1,if(isstring(#),#,text(#)));
-  sL=concat(sL,tmp1);
+  if(length(tmp)>0,
+    tmp1=tokenize(tmp,"//");
+    tmp1=apply(tmp1,if(isstring(#),#,text(#)));
+    sL=concat(sL,tmp1);
+  );
 );
-sL=select(sL,length(#)>0);
 ns=length(sL);
 
 forall(1..(length(sL)),nn,
   strt=Gettexform(sL_nn);
-  Drwletter(tposL_(nt-ns+nn),strt,20);
+  tmp="T"+text(nt-ns+nn)+".xy";
+  tmp=parse(tmp)+[1,-0.2];
+  Drwletter(tmp,strt,20);
   texstr=texstr+strt;
 );
 
 Windispg();
-
 ;
 </script>
     <script type="text/javascript">
@@ -3382,8 +3402,7 @@ var cdy = CindyJS({
   geometry: [
     {name: "Text1", type: "EditableText", pos: [3.8243902439024393, -4.0, -0.23779288220888373], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 1.0, minwidth: 900, textsize: 24.0},
     {name: "Text2", type: "EditableText", pos: [4.0, -3.3245248314029237, -0.24786974501589504], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 1.0, minwidth: 900, textsize: 24.0},
-    {name: "SW", type: "Free", pos: [4.0, 3.4, -0.2], color: [1.0,1.0,1.0], labeled: false, size: 2.0, border:false },
-    {name: "NE", type: "Free", pos: [4.0, 1.2, 0.08], color: [1.0,1.0,1.0], labeled: false, size: 2.0, border:false },
+    {name: "T___", type: "Free", pos: [4.0, 1.2, 0.08], color: [1.0, 0.0, 0.0], labeled: false, size: 3.0, border: true },
     {name: "Text3", type: "EditableText", pos: [4.0, 0.9471964655175849, -0.25001840218734356], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 1.0, minwidth: 900, textsize: 24.0},
     {name: "Text85", type: "Button", pos: [4.0, -1.2118226600985218, 0.12006783461285998], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 0.0], fillalpha: 0.27272728085517883, text_fontfamily: "monospace", script: "funflg=1;name=\"fr(\";", text: "fr", textsize: 22.0},
     {name: "Text91", type: "Button", pos: [4.0, 0.29530201342281875, 0.08997029352030751], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 0.0, 0.0], fillalpha: 0.5, script: "funflg=1;Delete();", text: "DEL", textsize: 18.0},
@@ -3475,13 +3494,20 @@ var cdy = CindyJS({
     {name: "Text66", type: "Button", pos: [4.0, -1.1926605504587156, 0.0745375242397877], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 0.0], fillalpha: 0.27272728085517883, text_fontfamily: "monospace", script: "funflg=1;name=\"(inf)\";", text: "inf", textsize: 22.0},
     {name: "Text99", type: "Button", pos: [4.0, 3.1758793969849246, -0.24496251684834752], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 0.0], fillalpha: 0.27272728085517883, text_fontfamily: "monospace", script: "funflg=1;name=\"sum(\";", text: "sum", textsize: 22.0},
     {name: "Text71", type: "Button", pos: [4.0, 1.795918367346939, -0.24871194312663858], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 0.0], fillalpha: 0.27272728085517883, text_fontfamily: "monospace", script: "funflg=1;name=\"mat(\";", text: "mat", textsize: 22.0},
-    {name: "Text77", type: "Button", pos: [4.0, 2.525252525252525, -0.24619970127687452], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 0.0], fillalpha: 0.27272728085517883, text_fontfamily: "monospace", script: "funflg=1;name=\"det(\";", text: "det", textsize: 22.0}
+    {name: "Text77", type: "Button", pos: [4.0, 2.525252525252525, -0.24619970127687452], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 0.0], fillalpha: 0.27272728085517883, text_fontfamily: "monospace", script: "funflg=1;name=\"det(\";", text: "det", textsize: 22.0},
+    {name: "SW", type: "Free", pos: [4.0, 3.4, -0.2], color: [1.0,1.0,1.0], labeled: false, size: 2.0, border:false },
+    {name: "T1", type: "Free", pos: [4.0, -2.933333333333333, -0.26666666666666666], color: [0.0, 0.0, 0.0], labeled: false, size: 3.0, border: true },
+    {name: "T2", type: "Free", pos: [4.0, -2.24, -0.26666666666666666], color: [0.0, 0.0, 0.0], labeled: false, size: 3.0, border: true },
+    {name: "T3", type: "Free", pos: [4.0, -1.5466666666666666, -0.26666666666666666], color: [0.0, 0.0, 0.0], labeled: false, size: 3.0, border: true },
+    {name: "T4", type: "Free", pos: [4.0, -0.853333333333333, -0.26666666666666666], color: [0.0, 0.0, 0.0], labeled: false, size: 3.0, border: true },
+    {name: "T5", type: "Free", pos: [4.0, -0.1599999999999999, -0.26666666666666666], color: [0.0, 0.0, 0.0], labeled: false, size: 3.0, border: true },
+    {name: "NE", type: "Free", pos: [4.0, 1.2, 0.08], color: [1.0,1.0,1.0], labeled: false, size: 2.0, border:false }
   ],
   ports: [{
     id: "CSCanvas",
     width: 1055,
-    height: 516,
-    transform: [{visibleRect: [-24.575598666956516, 21.457492659128977, 61.99287076088697, -20.88310471031864]}],
+    height: 500,
+    transform: [{visibleRect: [-24.575598666956516, 21.457492659128977, 61.99287076088697, -19.57021797018073]}],
     grid: 5.0,
     background: "rgb(247,247,247)"
   }],
