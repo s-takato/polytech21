@@ -14,8 +14,9 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>
 //
 
-println("ketcindylibkey[20210606] loaded");
+println("ketcindylibkey[20210612] loaded");
 
+// 210612 Replacefun debugged
 // 210606 Replacematdet,Extractvar added
 // 210604 Replacefun, Morefunctions added
 //              Modifyfortex changed ( (inf) added )
@@ -46,7 +47,7 @@ Modifyfortex(str):=(
 );
 
 Replacefun(str,name,repL):=(  //new 210604
-  regional(out,sub,pre,post,comL,ctr,lev,nn,
+  regional(out,sub,rest,pre,post,comL,ctr,lev,nn,
      tmp,tmp1,tmp2);
   out=str;
   pre=""; post=""; sub="";
@@ -54,7 +55,7 @@ Replacefun(str,name,repL):=(  //new 210604
   ctr=1;
   while((tmp>0)&(ctr<50),
     pre=substring(out,0,tmp-1);
-    sub=substring(out,tmp+2,length(out));
+    sub=substring(out,tmp+length(name)-2,length(out));
     tmp1=Bracket(sub,"()");
     tmp1=select(tmp1,#_2==-1);
     tmp1=tmp1_1_1;
@@ -86,9 +87,9 @@ Replacefun(str,name,repL):=(  //new 210604
       out="";
     );
     ctr=ctr+1;
+    out=pre+out+post; //210612[moved]
     tmp=indexof(out,name);
   );
-  out=pre+out+post;
   out;
 );
 
