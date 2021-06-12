@@ -2,10 +2,10 @@
 
 nch=3;
 ch=3;
-posyL=[17.3,14,-3];
+posyL=[18.5,15.5,-3];
 px=-15;
-nt=5;
-tposL=apply(1..nt,[px,11-2.6*(#-1)]);
+nt=6;
+tposL=apply(1..nt,[px,13-2.6*(#-1)]);
 
 //  only for kemath
 

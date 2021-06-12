@@ -6,6 +6,8 @@ Text2
 
 Text3
 
+Text4
+funflg=1;name="Lb";
 Text10
 funflg=1;name="n0";
 Text11
@@ -29,7 +31,8 @@ funflg=1;name="n9";
 Text20
 funflg=1;name="La";
 Text21
-funflg=1;name="Lb";
+"Mkketcindyjs(append(KETJSOP,"+Dqq("Web=y")+"));");
+
 Text22
 funflg=1;name="Lc";
 Text23
@@ -170,6 +173,8 @@ Text91
 funflg=1;Delete();
 Text92
 funflg=1;Allclear();
+Text93
+npos=length(strnow);
 Text94
 funflg=1;name="(pm)";
 Text95
