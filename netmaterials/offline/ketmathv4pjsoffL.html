@@ -2851,47 +2851,42 @@ Modifyfortex(str):=(
 Replacefun(str,name,repL):=(  //new 210604
   regional(out,sub,rest,pre,post,comL,ctr,lev,nn,
      tmp,tmp1,tmp2);
-  out=str;
-  pre=""; post=""; sub="";
-  tmp=indexof(out,name);
+  out="";
+  pre=""; post=str; sub="";
+  tmp=indexof(post,name);
   ctr=1;
   while((tmp>0)&(ctr<50),
-    pre=substring(out,0,tmp-1);
-    sub=substring(out,tmp+length(name)-2,length(out));
+    pre=substring(post,0,tmp-1);
+    sub=substring(post,tmp+length(name)-2,length(post));
     tmp1=Bracket(sub,"()");
     tmp1=select(tmp1,#_2==-1);
     tmp1=tmp1_1_1;
-    post=substring(sub,tmp1,length(out));
+    post=substring(sub,tmp1,length(sub));
     sub=substring(sub,0,tmp1);
     tmp1=Bracket(sub,"()");
-    tmp2=Indexall(sub,",");
-    comL=[1];
-    forall(tmp2,nn,
-      lev=select(tmp1,#_1<nn);
-      lev=lev_(-1);
-      if((lev_2==1)%(lev_2==-2),
-        comL=append(comL,nn);
+    tmp2=Getlevel(sub,",");
+
+    tmp2=select(tmp2,#_2==1);
+    tmp2=apply(tmp2,#_1);
+    tmp2=prepend(1,tmp2);
+    tmp2=append(tmp2,length(sub));
+    println([70,sub,tmp2,repL]);
+    if(length(tmp2)==length(repL),
+      forall(1..(length(tmp2)-1),
+        tmp=substring(sub,tmp2_#,tmp2_(#+1)-1);
+        if(!contains(["e^("],name),
+          if(indexof(tmp,"-")+indexof(tmp,"+")>0,tmp="("+tmp+")");
+        );
+        pre=pre+repL_#+tmp;
+        if(#<length(tmp2)-1,pre=pre+",");
       );
+      pre=pre+repL_(length(tmp2));
     );
-    comL=append(comL,length(sub));
-    if(length(comL)==length(repL),
-      out=repL_1;
-      tmp1=comL_1;
-      forall(2..(length(comL)),
-        tmp2=substring(sub,tmp1,comL_#-1);
-        out=out+tmp2;
-        out=out+repL_#;
-        tmp1=comL_#;
-      );
-    ,
-      tmp1=replace(name,"(","");
-      pre=pre+tmp1+sub;
-      out="";
-    );
+    out=out+pre;
+    tmp=indexof(post,name);
     ctr=ctr+1;
-    out=pre+out+post; //210612[moved]
-    tmp=indexof(out,name);
   );
+  out=out+post;
   out;
 );
 
@@ -2988,6 +2983,7 @@ Morefunction(str):=( //new 210604
   out=Replacefun(out,"int(",["\displaystyle\int_{","}^{","}","\,d"," "]);
   out=Replacefun(out,"int(",["\displaystyle\int\,","\,d"," "]);
   out=Replacefun(out,"sum(",["\displaystyle\sum_{","}^{","}{","}"]); //210606
+  out=Replacefun(out,"e^(",["\exp{","}"]); //210612
   out=Replacematdet(out); //210606
   out;
 );
@@ -3235,6 +3231,7 @@ Gettexform(str):=(
       tmp=Modifyfortex(tmp);
       tmp=Morefunction(tmp);
       tmp=Addasterisk(tmp);
+      tmp=replace(tmp,"\exp","e^");
       tmp1=Totexform(tmp);
       tmp1=replace(tmp1,"a r r a y","array"); //210606[2lines]
       repeat(5,tmp1=replace(tmp1,"c c","cc"));
@@ -3540,9 +3537,9 @@ var cdy = CindyJS({
   ],
   ports: [{
     id: "CSCanvas",
-    width: 1046,
+    width: 1035,
     height: 469,
-    transform: [{visibleRect: [-24.406086072073695, 21.220812052085243, 65.64247135787016, -19.154688363444084]}],
+    transform: [{visibleRect: [-24.406086072073695, 21.220812052085243, 64.69549800057631, -19.154688363444084]}],
     grid: 5.0,
     background: "rgb(247,247,247)"
   }],
