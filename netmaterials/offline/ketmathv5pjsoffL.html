@@ -2858,6 +2858,7 @@ Replacefun(str,name,repL):=(  //new 210604
   while((tmp>0)&(ctr<50),
     pre=substring(post,0,tmp-1);
     sub=substring(post,tmp+length(name)-2,length(post));
+println([60,sub]);
     tmp1=Bracket(sub,"()");
     tmp1=select(tmp1,#_2==-1);
     tmp1=tmp1_1_1;
@@ -2865,12 +2866,10 @@ Replacefun(str,name,repL):=(  //new 210604
     sub=substring(sub,0,tmp1);
     tmp1=Bracket(sub,"()");
     tmp2=Getlevel(sub,",");
-
     tmp2=select(tmp2,#_2==1);
     tmp2=apply(tmp2,#_1);
     tmp2=prepend(1,tmp2);
     tmp2=append(tmp2,length(sub));
-    println([70,sub,tmp2,repL]);
     if(length(tmp2)==length(repL),
       forall(1..(length(tmp2)-1),
         tmp=substring(sub,tmp2_#,tmp2_(#+1)-1);
@@ -2878,7 +2877,6 @@ Replacefun(str,name,repL):=(  //new 210604
           if(indexof(tmp,"-")+indexof(tmp,"+")>0,tmp="("+tmp+")");
         );
         pre=pre+repL_#+tmp;
-        if(#<length(tmp2)-1,pre=pre+",");
       );
       pre=pre+repL_(length(tmp2));
     );
@@ -2979,10 +2977,10 @@ Morefunction(str):=( //new 210604
   regional(out,name,repL);
   out=str;
   out=Replacefun(out,"tfr(",["\tfrac{","}{","}"]);
-  out=Replacefun(out,"lim(",["\displaystyle\lim_{","\to\,","}",""]);
-  out=Replacefun(out,"int(",["\displaystyle\int_{","}^{","}","\,d"," "]);
-  out=Replacefun(out,"int(",["\displaystyle\int\,","\,d"," "]);
-  out=Replacefun(out,"sum(",["\displaystyle\sum_{","}^{","}{","}"]); //210606
+  out=Replacefun(out,"lim(",["\displaystyle\lim_{","\to\,","}"]); //210617from
+  out=Replacefun(out,"int(",["\displaystyle\int_{","}^{","}"]);
+  out=Replacefun(out,"int(",["\displaystyle\int\,","\,"]);
+  out=Replacefun(out,"sum(",["\displaystyle\sum_{","}^{","}"]); //210617to
   out=Replacefun(out,"e^(",["\exp{","}"]); //210612
   out=Replacematdet(out); //210606
   out;
@@ -3523,7 +3521,7 @@ var cdy = CindyJS({
   geometry: [
     {name: "Text1", type: "EditableText", pos: [3.817258883248731, -4.0, -0.23585695636186368], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 1.0, minwidth: 900, textsize: 24.0},
     {name: "SW", type: "Free", pos: [4.0, 3.3849094889123466, -0.20065303812093022], color: [1.0,1.0,1.0], labeled: false, size: 2.0, border:false },
-    {name: "T2", type: "Free", pos: [4.0, -2.8, -0.26666666666666666], color: [1.0, 0.784, 0.0], labeled: false, size: 3.0, border: true },
+    {name: "T2", type: "Free", pos: [4.0, -2.7999999999999994, -0.26666666666666666], color: [1.0, 0.784, 0.0], labeled: false, size: 3.0, border: true },
     {name: "T3", type: "Free", pos: [4.0, -1.8666666666666667, -0.26666666666666666], color: [0.0, 0.0, 0.0], labeled: false, size: 3.0, border: true },
     {name: "T4", type: "Free", pos: [4.0, -0.9333333333333333, -0.26666666666666666], color: [1.0, 0.784, 0.0], labeled: false, size: 3.0, border: true },
     {name: "NE", type: "Free", pos: [4.0, 1.013339367869996, 0.06862662941899622], color: [1.0,1.0,1.0], labeled: false, size: 2.0, border:false },
@@ -3627,8 +3625,8 @@ var cdy = CindyJS({
   ports: [{
     id: "CSCanvas",
     width: 1069,
-    height: 492,
-    transform: [{visibleRect: [-25.15141729233611, 21.764855358064253, 63.146990213435, -18.873887853198035]}],
+    height: 516,
+    transform: [{visibleRect: [-25.15141729233611, 21.764855358064253, 63.146990213435, -20.856265570820586]}],
     grid: 5.0,
     background: "rgb(247,247,247)"
   }],
