@@ -16,6 +16,7 @@
 
 println("ketcindylibkey[20210612] loaded");
 
+// 210615 Keytalble changed ( name added )
 // 210612 Replacefun debugged
 // 210606 Replacematdet,Extractvar added
 // 210604 Replacefun, Morefunctions added
@@ -457,7 +458,7 @@ Dispposition(pos,npos,str):=(
   tmp=[0.1,0];
   p1=pos-tmp;  p2=pos+tmp;
   p3=p1+dp; p4=p2+dp;
-  Listplot("-disp",[p1,p2,p4,p3,p1],["nodisp"]);
+  Listplot("-disp",[p1,p2,p4,p3,p1],["nodisp","Msg=n"]);
   Shade(["disp"],["Color=red"]);
   if(length(str)>0,
     tmp=max([0,npos-4]);
@@ -481,14 +482,27 @@ Addfunstr(name,npos,strnow):=(
   out;
 );
 
-Keytable(nx,dx,ny,dy,plb,clr):=(
-  regional(xL,yL,plt,prt,prb);
-  xL=apply(0..nx,#/10*dx);
-  yL=apply(0..ny,#/10*dy);
-  plt=plb+[0,yL_(-1)]; prt=plt+[xL_(-1),0]; prb=prt-[0,yL_(-1)];
+Keytable(nx,dx,ny,dy,plb,clr):=Keytable(nx,dx,ny,dy,plb,clr,[],0);
+Keytable(nx,dx,ny,dy,plb,clr,nameL,nmove,sz):=(
+  regional(xL,yL,plt,prt,prb,row,col,name,tmp1,tmp2,pos);
+  xL=apply(0..nx,#/10*dx+plb_1);
+  yL=apply(0..ny,(ny-#)/10*dy+plb_2);
+  plt=[xL_1,yL_1]; prt=[xL_(-1),yL_1]; prb=[xL_(-1),yL_(-1)];
   fillpoly([plb,plt,prt,prb,plb],color->clr);
-  forall(xL,draw([plb_1+#,plb_2],[plb_1+#,plt_2],color->[0,0,0]));
-  forall(yL,draw([plb_1,plb_2+#],[prb_1,plb_2+#],color->[0,0,0]));
+  forall(xL,draw([#,plb_2],[#,plt_2],color->[0,0,0]));
+  forall(yL,draw([plb_1,#],[prb_1,#],color->[0,0,0]));
+  forall(1..(length(yL)-1),row,
+    tmp1=yL_row;
+    tmp2=yL_(row+1);
+    pos=[0,(tmp1+tmp2)/2];
+    forall(1..(length(xL)-1),col,
+      name=nameL_row_col;
+      tmp1=xL_col;
+      tmp2=xL_(col+1);
+      pos_1=(tmp1+tmp2)/2;
+      drawtext(pos+nmove,name,align->"mid",size->sz);
+    );
+  );
 );
 
 Allclear():=(
@@ -499,7 +513,7 @@ Allclear():=(
   funflg=0;
 );
 
-Delete():=(
+Deletekey():=(
   regional(tmp1,tmp2);
   if(npos>0,
     tmp1=substring(strnow,0,npos-1);
