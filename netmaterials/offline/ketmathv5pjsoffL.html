@@ -2848,46 +2848,6 @@ Modifyfortex(str):=(
   out;
 );
 
-Replacefun(str,name,repL):=(  //new 210604
-  regional(out,sub,rest,pre,post,comL,ctr,lev,nn,
-     tmp,tmp1,tmp2);
-  out="";
-  pre=""; post=str; sub="";
-  tmp=indexof(post,name);
-  ctr=1;
-  while((tmp>0)&(ctr<50),
-    pre=substring(post,0,tmp-1);
-    sub=substring(post,tmp+length(name)-2,length(post));
-println([60,sub]);
-    tmp1=Bracket(sub,"()");
-    tmp1=select(tmp1,#_2==-1);
-    tmp1=tmp1_1_1;
-    post=substring(sub,tmp1,length(sub));
-    sub=substring(sub,0,tmp1);
-    tmp1=Bracket(sub,"()");
-    tmp2=Getlevel(sub,",");
-    tmp2=select(tmp2,#_2==1);
-    tmp2=apply(tmp2,#_1);
-    tmp2=prepend(1,tmp2);
-    tmp2=append(tmp2,length(sub));
-    if(length(tmp2)==length(repL),
-      forall(1..(length(tmp2)-1),
-        tmp=substring(sub,tmp2_#,tmp2_(#+1)-1);
-        if(!contains(["e^("],name),
-          if(indexof(tmp,"-")+indexof(tmp,"+")>0,tmp="("+tmp+")");
-        );
-        pre=pre+repL_#+tmp;
-      );
-      pre=pre+repL_(length(tmp2));
-    );
-    out=out+pre;
-    tmp=indexof(post,name);
-    ctr=ctr+1;
-  );
-  out=out+post;
-  out;
-);
-
 Extractvar(strorg):=Extractvar(strorg,",");
 Extractvar(strorg,mark):=(
   regional(out,parL,str,cma,nc,first,last,
@@ -2973,13 +2933,57 @@ Replacematdet(str):=(
   out;
 );
 
+Replacefun(str,name,repL):=(  //new 210604
+  regional(out,sub,rest,pre,post,comL,ctr,lev,nn,
+     tmp,tmp1,tmp2);
+  out="";
+  pre=""; post=str; sub="";
+  tmp=indexof(post,name);
+  ctr=1;
+  while((tmp>0)&(ctr<50),
+    pre=substring(post,0,tmp-1);
+    sub=substring(post,tmp+length(name)-2,length(post));
+    tmp1=Bracket(sub,"()");
+    tmp1=select(tmp1,#_2==-1);
+    tmp1=tmp1_1_1;
+    post=substring(sub,tmp1,length(sub));
+    sub=substring(sub,0,tmp1);
+    tmp1=Bracket(sub,"()");
+    tmp2=Getlevel(sub,",");
+    if(length(tmp2)==0,
+      if(name=="int(",
+        pre=pre+"\displaystyle\int\,";
+      );
+    ,
+      tmp2=select(tmp2,#_2==1);
+      tmp2=apply(tmp2,#_1);
+      tmp2=prepend(1,tmp2);
+      tmp2=append(tmp2,length(sub));
+      if(length(tmp2)==length(repL),
+        forall(1..(length(tmp2)-1),
+          tmp=substring(sub,tmp2_#,tmp2_(#+1)-1);
+          if(!contains(["e^("],name),
+            if(indexof(tmp,"-")+indexof(tmp,"+")>0,tmp="("+tmp+")");
+          );
+          pre=pre+repL_#+tmp;
+        );
+        pre=pre+repL_(length(tmp2));
+      );
+    );
+    out=out+pre;
+    tmp=indexof(post,name);
+    ctr=ctr+1;
+  );
+  out=out+post;
+  out;
+);
+
 Morefunction(str):=( //new 210604
   regional(out,name,repL);
   out=str;
   out=Replacefun(out,"tfr(",["\tfrac{","}{","}"]);
   out=Replacefun(out,"lim(",["\displaystyle\lim_{","\to\,","}"]); //210617from
   out=Replacefun(out,"int(",["\displaystyle\int_{","}^{","}"]);
-  out=Replacefun(out,"int(",["\displaystyle\int\,","\,"]);
   out=Replacefun(out,"sum(",["\displaystyle\sum_{","}^{","}"]); //210617to
   out=Replacefun(out,"e^(",["\exp{","}"]); //210612
   out=Replacematdet(out); //210606
@@ -3521,7 +3525,7 @@ var cdy = CindyJS({
   geometry: [
     {name: "Text1", type: "EditableText", pos: [3.817258883248731, -4.0, -0.23585695636186368], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 1.0, minwidth: 900, textsize: 24.0},
     {name: "SW", type: "Free", pos: [4.0, 3.3849094889123466, -0.20065303812093022], color: [1.0,1.0,1.0], labeled: false, size: 2.0, border:false },
-    {name: "T2", type: "Free", pos: [4.0, -2.7999999999999994, -0.26666666666666666], color: [1.0, 0.784, 0.0], labeled: false, size: 3.0, border: true },
+    {name: "T2", type: "Free", pos: [4.0, -2.8, -0.26666666666666666], color: [1.0, 0.784, 0.0], labeled: false, size: 3.0, border: true },
     {name: "T3", type: "Free", pos: [4.0, -1.8666666666666667, -0.26666666666666666], color: [0.0, 0.0, 0.0], labeled: false, size: 3.0, border: true },
     {name: "T4", type: "Free", pos: [4.0, -0.9333333333333333, -0.26666666666666666], color: [1.0, 0.784, 0.0], labeled: false, size: 3.0, border: true },
     {name: "NE", type: "Free", pos: [4.0, 1.013339367869996, 0.06862662941899622], color: [1.0,1.0,1.0], labeled: false, size: 2.0, border:false },
@@ -3604,7 +3608,7 @@ var cdy = CindyJS({
     {name: "Text51", type: "Button", pos: [2.259162333081633, -4.0, 0.24064973199439937], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 0.0], fillalpha: 0.27272728085517883, text_fontfamily: "monospace", script: "funflg=1;name=\"(geq)\";", text: "　", textsize: 18.0},
     {name: "Text20", type: "Button", pos: [4.0, -2.0729277104015535, 0.20039635549659962], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 0.0], fillalpha: 0.27272728085517883, text_fontfamily: "monospace", script: "funflg=1;name=\"La\";", text: "　", textsize: 18.0},
     {name: "Text64", type: "Button", pos: [4.0, -0.003313336235639651, 0.09283615824690308], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 0.0, 0.0], fillalpha: 1.0, text_fontfamily: "monospace", script: "npos=max([0,npos-1]);", text: "<", textsize: 24.0, textbold: true},
-    {name: "Text65", type: "Button", pos: [4.0, -0.020249518583120393, 0.07582611472969482], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 0.0, 0.0], fillalpha: 1.0, text_fontfamily: "monospace", script: "npos=min([npos+1,length(strnow)]);", text: ">", textsize: 24.0},
+    {name: "Text65", type: "Button", pos: [4.0, -0.020249518583120393, 0.07582611472969482], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 0.0, 0.0], fillalpha: 1.0, text_fontfamily: "monospace", script: "npos=min([npos+1,length(StrL_ch)]);", text: ">", textsize: 24.0},
     {name: "Text94", type: "Button", pos: [1.4640645556524061, -4.0, 0.24064973199439937], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 0.0], fillalpha: 0.27272728085517883, text_fontfamily: "monospace", script: "funflg=1;name=\"(pm)\";", text: "　", textsize: 18.0},
     {name: "Text95", type: "Button", pos: [0.6123775701973084, -4.0, 0.24185157982933717], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 0.0], fillalpha: 0.27272728085517883, text_fontfamily: "monospace", script: "funflg=1;name=\"(mp)\";", text: "　", textsize: 18.0},
     {name: "Text101", type: "Button", pos: [4.0, -3.5398230088495577, -0.2055921256782617], color: [0.0, 0.0, 0.0], fillcolor: [0.0, 1.0, 0.0], fillalpha: 0.45, script: "ch=1;initflg=1;", text: "1", textsize: 18.0},
@@ -3617,16 +3621,16 @@ var cdy = CindyJS({
     {name: "Text99", type: "Button", pos: [4.0, 3.5321723902648734, -0.26045400095175597], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 0.0], fillalpha: 0.27272728085517883, text_fontfamily: "monospace", script: "funflg=1;name=\"sum(\";", text: "　", textsize: 18.0},
     {name: "Text71", type: "Button", pos: [4.0, 1.835039736568689, -0.25907065045376243], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 0.0], fillalpha: 0.27272728085517883, text_fontfamily: "monospace", script: "funflg=1;name=\"mat(\";", text: "　", textsize: 18.0},
     {name: "Text77", type: "Button", pos: [4.0, 2.666727263082949, -0.259875938822862], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 0.0], fillalpha: 0.27272728085517883, text_fontfamily: "monospace", script: "funflg=1;name=\"det(\";", text: "　", textsize: 18.0},
-    {name: "Text93", type: "Button", pos: [4.0, -0.019457396615419918, 0.07285994390660987], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 0.0, 0.0], fillalpha: 1.0, text_fontfamily: "monospace", script: "npos=length(strnow);", text: ">>", textsize: 24.0},
+    {name: "Text93", type: "Button", pos: [4.0, -0.019457396615419918, 0.07285994390660987], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 0.0, 0.0], fillalpha: 1.0, text_fontfamily: "monospace", script: "npos=length(StrL_ch);", text: ">>", textsize: 24.0},
     {name: "Text100", type: "Button", pos: [4.0, 0.25953651685733786, 0.0854606973873333], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 0.0, 0.0], fillalpha: 0.5, script: "funflg=1;name=\"Clearnow()\";", text: "Clr", textsize: 18.0},
     {name: "Text7", type: "Button", pos: [4.0, 0.22401398182969148, 0.07582611472969482], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 0.0, 0.0], fillalpha: 0.5, script: "funflg=1;name=\"Push()\";", text: "PS", textsize: 18.0},
     {name: "Text9", type: "Button", pos: [4.0, 0.21863755897966783, 0.0719934076781086], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 0.0, 0.0], fillalpha: 0.5, script: "funflg=1;name=\"Pull()\";", text: "PL", textsize: 18.0}
   ],
   ports: [{
     id: "CSCanvas",
-    width: 1069,
-    height: 516,
-    transform: [{visibleRect: [-25.15141729233611, 21.764855358064253, 63.146990213435, -20.856265570820586]}],
+    width: 1077,
+    height: 533,
+    transform: [{visibleRect: [-25.15141729233611, 21.764855358064253, 63.807782785975846, -22.26044978746989]}],
     grid: 5.0,
     background: "rgb(247,247,247)"
   }],

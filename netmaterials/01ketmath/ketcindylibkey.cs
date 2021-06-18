@@ -47,47 +47,6 @@ Modifyfortex(str):=(
   out;
 );
 
-Replacefun(str,name,repL):=(  //new 210604
-  regional(out,sub,rest,pre,post,comL,ctr,lev,nn,
-     tmp,tmp1,tmp2);
-  out="";
-  pre=""; post=str; sub="";
-  tmp=indexof(post,name);
-  ctr=1;
-  while((tmp>0)&(ctr<50),
-    pre=substring(post,0,tmp-1);
-    sub=substring(post,tmp+length(name)-2,length(post));
-println([60,sub]);
-    tmp1=Bracket(sub,"()");
-    tmp1=select(tmp1,#_2==-1);
-    tmp1=tmp1_1_1;
-    post=substring(sub,tmp1,length(sub));
-    sub=substring(sub,0,tmp1);
-    tmp1=Bracket(sub,"()");
-    tmp2=Getlevel(sub,",");
-    tmp2=select(tmp2,#_2==1);
-    tmp2=apply(tmp2,#_1);
-    tmp2=prepend(1,tmp2);
-    tmp2=append(tmp2,length(sub));
-    if(length(tmp2)==length(repL),
-      forall(1..(length(tmp2)-1),
-        tmp=substring(sub,tmp2_#,tmp2_(#+1)-1);
-        if(!contains(["e^("],name),
-          if(indexof(tmp,"-")+indexof(tmp,"+")>0,tmp="("+tmp+")");
-        );
-        pre=pre+repL_#+tmp;
-//        if(#<length(tmp2)-1,pre=pre+","); //210617removed
-      );
-      pre=pre+repL_(length(tmp2));
-    );
-    out=out+pre;
-    tmp=indexof(post,name);
-    ctr=ctr+1;
-  );
-  out=out+post;
-  out;
-);
-
 Extractvar(strorg):=Extractvar(strorg,",");
 Extractvar(strorg,mark):=(
   regional(out,parL,str,cma,nc,first,last,
@@ -173,13 +132,58 @@ Replacematdet(str):=(
   out;
 );
 
+Replacefun(str,name,repL):=(  //new 210604
+  regional(out,sub,rest,pre,post,comL,ctr,lev,nn,
+     tmp,tmp1,tmp2);
+  out="";
+  pre=""; post=str; sub="";
+  tmp=indexof(post,name);
+  ctr=1;
+  while((tmp>0)&(ctr<50),
+    pre=substring(post,0,tmp-1);
+    sub=substring(post,tmp+length(name)-2,length(post));
+    tmp1=Bracket(sub,"()");
+    tmp1=select(tmp1,#_2==-1);
+    tmp1=tmp1_1_1;
+    post=substring(sub,tmp1,length(sub));
+    sub=substring(sub,0,tmp1);
+    tmp1=Bracket(sub,"()");
+    tmp2=Getlevel(sub,",");
+    if(length(tmp2)==0,
+      if(name=="int(",
+        pre=pre+"\displaystyle\int\,";
+      );
+    ,
+      tmp2=select(tmp2,#_2==1);
+      tmp2=apply(tmp2,#_1);
+      tmp2=prepend(1,tmp2);
+      tmp2=append(tmp2,length(sub));
+      if(length(tmp2)==length(repL),
+        forall(1..(length(tmp2)-1),
+          tmp=substring(sub,tmp2_#,tmp2_(#+1)-1);
+          if(!contains(["e^("],name),
+            if(indexof(tmp,"-")+indexof(tmp,"+")>0,tmp="("+tmp+")");
+          );
+          pre=pre+repL_#+tmp;
+//        if(#<length(tmp2)-1,pre=pre+","); //210617removed
+        );
+        pre=pre+repL_(length(tmp2));
+      );
+    );
+    out=out+pre;
+    tmp=indexof(post,name);
+    ctr=ctr+1;
+  );
+  out=out+post;
+  out;
+);
+
 Morefunction(str):=( //new 210604
   regional(out,name,repL);
   out=str;
   out=Replacefun(out,"tfr(",["\tfrac{","}{","}"]);
   out=Replacefun(out,"lim(",["\displaystyle\lim_{","\to\,","}"]); //210617from
   out=Replacefun(out,"int(",["\displaystyle\int_{","}^{","}"]);
-  out=Replacefun(out,"int(",["\displaystyle\int\,","\,"]);
   out=Replacefun(out,"sum(",["\displaystyle\sum_{","}^{","}"]); //210617to
   out=Replacefun(out,"e^(",["\exp{","}"]); //210612
   out=Replacematdet(out); //210606
