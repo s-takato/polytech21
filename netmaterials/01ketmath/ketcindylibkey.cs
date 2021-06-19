@@ -36,9 +36,9 @@ npos=0;
 
 Modifyfortex(str):=(
   regional(rep1L,rep2L,nn,tmp,tmp1,out);
-  rep1L=["(sp)","(cross)","(cdot)","(deg)","(neq)",
+  rep1L=["(sp)","(cross)","(cdot)","(deg)","(circ)","(neq)",
          "(geq)","(leq)","(pm)","(mp)","(inf)"];
-  rep2L=["\;","{\times}\,","{\cdot}\,","^{\circ}\,","{\neq}\,",
+  rep2L=["\;","{\times}\,","{\cdot}\,","^{\circ}\,","\circ\,","{\neq}\,",
          "{\geq}\,","{\leq}\,","{\pm}\,","{\mp}\,","{\infty}\,"];
   out=str;
   forall(1..(length(rep1L)),nn,
@@ -185,7 +185,7 @@ Morefunction(str):=( //new 210604
   out=Replacefun(out,"lim(",["\displaystyle\lim_{","\to\,","}"]); //210617from
   out=Replacefun(out,"int(",["\displaystyle\int_{","}^{","}"]);
   out=Replacefun(out,"sum(",["\displaystyle\sum_{","}^{","}"]); //210617to
-  out=Replacefun(out,"e^(",["\exp{","}"]); //210612
+//  out=Replacefun(out,"e^(",["\exp{","}"]); //210612
   out=Replacematdet(out); //210606
   out;
 );
@@ -440,7 +440,7 @@ Gettexform(str):=(
       tmp=Modifyfortex(tmp);
       tmp=Morefunction(tmp);
       tmp=Addasterisk(tmp);
-      tmp=replace(tmp,"\exp","e^");
+      tmp=replace(tmp,"\exp(","e^(");
       tmp1=Totexform(tmp);
       tmp1=replace(tmp1,"a r r a y","array"); //210606[2lines]
       repeat(5,tmp1=replace(tmp1,"c c","cc"));
