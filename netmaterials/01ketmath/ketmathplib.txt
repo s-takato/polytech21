@@ -1,6 +1,7 @@
 //         20210619
 
 Shift=0;
+keytype=1;
 capflg=0;
 greflg=0;
 boldflg=0;
@@ -23,7 +24,7 @@ Seteditable(2,["","Size=24","Width=850"]);
 // no ketjs off
 
 Keyname():=(
-  regional(nL,tmp);
+  regional(nL,tmp1);
   nL=[
     ["°","＠","[","]","|","d","e","f","g","a","b","c","sin","sq",")","7","8","9","＋","lim"],
     ["$\times$","!","{","}","$\neq$","h","i","j","k","x","y","z","cos","fr",",","4","5","6","ー","int"],
@@ -33,21 +34,41 @@ Keyname():=(
   if(Shift==1,
     nL_1_20="mat"; nL_2_20="det"; nL_3_20="$\sum$"; nL_4_20="$\circ$";
   );
-  if(capflg==1,
-    nL_1_6="D"; nL_1_7="E"; nL_1_8="F"; nL_1_9="G"; nL_1_10="A"; nL_1_11="B"; nL_1_12="C";
-    nL_2_6="H"; nL_2_7="I"; nL_2_8="J"; nL_2_9="K"; nL_2_10="X"; nL_2_11="Y"; nL_2_12="Z";
-    nL_3_6="L"; nL_3_7="M"; nL_3_8="N"; nL_3_9="O"; nL_3_10="R"; nL_3_11="S"; nL_3_12="T";
-    nL_4_6="P"; nL_4_7="Q"; nL_4_8="U"; nL_4_9="V"; nL_4_10="W"; 
+  if(keytype==2,
+    tmp1=["D","E","F","G","A","B","C"]; forall(1..7,nL_1_(#+5)=tmp1_#);
+    tmp1=["H","I","J","K","X","Y","Z"]; forall(1..7,nL_2_(#+5)=tmp1_#);
+    tmp1=["L","M","N","O","R","S","T"]; forall(1..7,nL_3_(#+5)=tmp1_#);
+    tmp1=["P","Q","U","V","W"]; forall(1..5,nL_4_(#+5)=tmp1_#);
   );
-  if(greflg==1,
-    nL_1_6="$\Delta$"; nL_1_7="$\delta$"; nL_1_8="$\varepsilon$"; nL_1_9="$\varphi$"; 
-    nL_1_10="$\alpha$"; nL_1_11="$\beta$"; nL_1_12="$\gamma$";
-    nL_2_6="$\Theta$"; nL_2_7="$\theta$"; nL_2_8="$\chi$"; nL_2_9="$\xi$"; 
-    nL_2_10="$\kappa$"; nL_2_11="$\iota$"; nL_2_12="$\zeta$";
-    nL_3_6="$\lambda"; nL_3_7="$\mu$"; nL_3_8="$\nu$"; nL_3_9="$\omega$"; 
-    nL_3_10="$\rho$"; nL_3_11="$\sigma$"; nL_3_12="$\tau$";
-    nL_4_6="$\Psi$"; nL_4_7="$\psi$"; nL_4_8="$\Phi$"; nL_4_9="$\Lambda$"; 
-    nL_4_10="$\Omega$"; 
+  if(keytype==3,
+    tmp1=["$\Delta$","$\delta$","$\varepsilon$","$\varphi$","$\alpha$","$\beta$","$\gamma$"];
+    forall(1..7,nL_1_(#+5)=tmp1_#);
+    tmp1=["$\Theta$","$\theta$","$\chi$","$\xi$","$\kappa$","$\iota$","$\zeta$"];
+    forall(1..7,nL_2_(#+5)=tmp1_#);
+    tmp1=["$\lambda","$\mu$","$\nu$","$\omega$","$\rho$","$\sigma$","$\tau$"];
+    forall(1..7,nL_3_(#+5)=tmp1_#);
+    tmp1=["$\Psi$","$\psi$","$\Phi$","$\Lambda$","$\Omega$"];
+    forall(1..5,nL_4_(#+5)=tmp1_#);
+  );
+  if(keytype==4,
+    tmp1=apply(6..12,"$\mathbf{"+nL_1_#+"}$");
+    forall(1..7,nL_1_(#+5)=tmp1_#);
+    tmp1=apply(6..12,"$\mathbf{"+nL_2_#+"}$");
+    forall(1..7,nL_2_(#+5)=tmp1_#);
+    tmp1=apply(6..12,"$\mathbf{"+nL_3_#+"}$");
+    forall(1..7,nL_3_(#+5)=tmp1_#);
+    tmp1=apply(6..10,"$\mathbf{"+nL_4_#+"}$");
+    forall(1..5,nL_4_(#+5)=tmp1_#);
+  );
+  if(keytype==5,
+    tmp1=apply(6..12,"$\vec{"+nL_1_#+"}$");
+    forall(1..7,nL_1_(#+5)=tmp1_#);
+    tmp1=apply(6..12,"$\vec{"+nL_2_#+"}$");
+    forall(1..7,nL_2_(#+5)=tmp1_#);
+    tmp1=apply(6..12,"$\vec{"+nL_3_#+"}$");
+    forall(1..7,nL_3_(#+5)=tmp1_#);
+    tmp1=apply(6..10,"$\vec{"+nL_4_#+"}\;$");
+    forall(1..5,nL_4_(#+5)=tmp1_#);
   );
   nL;
 );
