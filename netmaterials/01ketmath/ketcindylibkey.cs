@@ -14,8 +14,10 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>
 //
 
-println("ketcindylibkey[20210612] loaded");
+println("ketcindylibkey[20210629 loaded");
 
+// 210629 Addasterisk debugged ( for e^ )
+//              Keytable changed
 // 210615 Keytalble changed ( name added )
 // 210612 Replacefun debugged
 // 210606 Replacematdet,Extractvar added
@@ -485,7 +487,7 @@ Addfunstr(name,npos,strnow):=(
   out;
 );
 
-Keytable(nx,dx,ny,dy,plb,clr):=Keytable(nx,dx,ny,dy,plb,clr,[],0);
+Keytable(nx,dx,ny,dy,plb,clr):=Keytable(nx,dx,ny,dy,plb,clr,[],0,22); //210629
 Keytable(nx,dx,ny,dy,plb,clr,nameL,nmove,sz):=(
   regional(xL,yL,plt,prt,prb,row,col,name,tmp1,tmp2,pos);
   xL=apply(0..nx,#/10*dx+plb_1);
@@ -494,16 +496,18 @@ Keytable(nx,dx,ny,dy,plb,clr,nameL,nmove,sz):=(
   fillpoly([plb,plt,prt,prb,plb],color->clr);
   forall(xL,draw([#,plb_2],[#,plt_2],color->[0,0,0]));
   forall(yL,draw([plb_1,#],[prb_1,#],color->[0,0,0]));
-  forall(1..(length(yL)-1),row,
-    tmp1=yL_row;
-    tmp2=yL_(row+1);
-    pos=[0,(tmp1+tmp2)/2];
-    forall(1..(length(xL)-1),col,
-      name=nameL_row_col;
-      tmp1=xL_col;
-      tmp2=xL_(col+1);
-      pos_1=(tmp1+tmp2)/2;
-      drawtext(pos+nmove,name,align->"mid",size->sz);
+  if(length(nameL)>0,
+    forall(1..(length(yL)-1),row,
+      tmp1=yL_row;
+      tmp2=yL_(row+1);
+      pos=[0,(tmp1+tmp2)/2];
+      forall(1..(length(xL)-1),col,
+        name=nameL_row_col;
+        tmp1=xL_col;
+        tmp2=xL_(col+1);
+        pos_1=(tmp1+tmp2)/2;
+        drawtext(pos+nmove,name,align->"mid",size->sz);
+      );
     );
   );
 );
