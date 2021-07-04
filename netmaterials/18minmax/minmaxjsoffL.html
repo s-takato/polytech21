@@ -25,126 +25,6 @@
 
 <script id="csinit" type="text/x-cindyscript">
 Invert(x):=reverse(x);
-Textedit(no):=(
-  regional(tmp,tmp1,tmp2);
-  tmp="Text"+text(no)+".currenttext";
-  tmp1=parse(tmp);
-  tmp1;
-);
-Textedit(n0,str):=Textedit(n0,str,"="); //210406from
-Textedit(n0,str,sep):=( //210208from
-  regional(tmp,tmp1,tmp2,out);
-  tmp1=str;
-tmp1=Textedit(n0); //
-  tmp2=tmp1;
-  if(length(sep)>0,
-    tmp=Strsplit(sep+tmp1,sep);
-    tmp2=tmp_(-1);
-  ); //210406to
-  if(length(tmp2)==0,out=str,out=tmp2);
-  out;
-); //210208to
-Strsplit(str,key):=( // 210422 renewed
-  regional(tmp,out);
-  tmp=tokenize(str,key);
-  out=apply(tmp,if(!isstring(#),Textformat(#,10),#));
-  out;
-);
-Textformat(value,dig):=(
-  regional(vv,tmp,tmp1);
-  if(islist(value),
-    tmp1="[";
-    forall(value,
-      tmp1=tmp1+Textformat(#,dig)+",";
-    );
-    if(length(tmp1)>1, //18.01.29from
-      tmp1=substring(tmp1,0,length(tmp1)-1);
-    );
-    tmp1=tmp1+"]"; //18.01.29until
-  ,
-    if(ispoint(value) % isstring(value),
-      if(isstring(value),tmp1=Dq+value+Dq,tmp1=text(value)); // 15.10.02
-    ,
-      tmp1=format(value,dig);
-    );
-  );
-  tmp1;
-);
-Subsedit(no,str):=(
- regional(tmp,tmp1);
- if(isstring(str),
-   tmp1=str;
- ,
-   tmp1=text(str);
- );
- tmp="Text"+text(no); //210211[2lines]
- parse(tmp).currenttext=tmp1;
-);
-Assign(str):=( //190125from
-  regional(tmp);
-  tmp=[];
-  forall(VLIST,tmp=concat(tmp,[#_1,#_2]));
-  Assign(str,tmp);
-); //190125to
-Assign(funstr,vrL):=Assign(funstr,vrL,6);
-Assign(funstr,Arg1,Arg2):=( //190813from
-  regional(vrL,precise,nn,out,tmp);
-  if(islist(Arg1),
-    vrL=Arg1; precise=Arg2;
-    nn=length(vrL)/2;
-    out=funstr;
-    forall(1..nn,
-      out=Assign(out,vrL_(2*#-1),vrL_(2*#),precise);
-    );
-  , 
-    out=Assign(funstr,Arg1,Arg2,6);
-  );
-  out;
-); //190813to
-Assign(funstr,varname,rep,precision):=(
-  regional(repstr,ii,jj,tmp,tmp1,tmp2,Notvar,Flg);
-  if(isstring(rep),repstr=rep,repstr="("+Textformat(rep,precise)+")"); //190811to
-  tmp=[46];  // 12.20
-  tmp=concat(tmp,48..57);
-  tmp=concat(tmp,65..90);
-  tmp=concat(tmp,97..122);
-  Notvar=apply(tmp,unicode(text(#),base->10));
-  tmp2="";
-  forall(1..100,
-    ii=indexof(funstr,varname);
-    if(ii>0,
-      Flg=0;
-      if(ii>1,
-        tmp=substring(funstr,ii-2,ii-1);
-        if(contains(Notvar,tmp),
-          tmp2=tmp2+substring(funstr,0,ii);
-          funstr=substring(funstr,ii,length(funstr));
-          Flg=1;
-        );
-      );
-      if(Flg==0,
-        jj=ii-1+length(varname);
-        if(jj<length(funstr),
-          tmp=substring(funstr,jj,jj+1));
-          if(contains(Notvar,tmp),
-          tmp2=tmp2+substring(funstr,0,jj);
-          funstr=substring(funstr,jj,length(funstr));
-          Flg=1;
-        );
-      );
-      if(Flg==0,
-        tmp2=tmp2+substring(funstr,0,ii-1)+repstr;
-        funstr=substring(funstr,jj,length(funstr));
-      );
-    );
-  );
-  funstr=tmp2+funstr;
-  funstr;
-);
-Dqq(str):=DqDq(str); //18.02.11
-DqDq(str):=(
-  unicode("0022")+str+unicode("0022");
-);
 Ketinit():=Ketinit("fig",0.3); //190831from
 Ketinit(Arg):=(//181001from
   if(isstring(Arg),
@@ -276,6 +156,26 @@ Putpoint(name,Ptinit,Pt):=(
     ptstr=name+".xy="+Textformat(Pcrd(Pt),10)+";";
     parse(ptstr);
     Ptpos(name,Pcrd([Pt_1,Pt_2])); //200529
+);
+Textformat(value,dig):=(
+  regional(vv,tmp,tmp1);
+  if(islist(value),
+    tmp1="[";
+    forall(value,
+      tmp1=tmp1+Textformat(#,dig)+",";
+    );
+    if(length(tmp1)>1, //18.01.29from
+      tmp1=substring(tmp1,0,length(tmp1)-1);
+    );
+    tmp1=tmp1+"]"; //18.01.29until
+  ,
+    if(ispoint(value) % isstring(value),
+      if(isstring(value),tmp1=Dq+value+Dq,tmp1=text(value)); // 15.10.02
+    ,
+      tmp1=format(value,dig);
+    );
+  );
+  tmp1;
 );
 Ptpos(pt):=Ptpos(pt,[]);
 Ptpos(ptorg,pos):=(
@@ -526,6 +426,12 @@ Divoptions(options):=(
   );
   [Ltype,Noflg,Inflg,Outflg,eqL,realL,strL,color,opstr,opcindy];
 );
+Strsplit(str,key):=( // 210422 renewed
+  regional(tmp,out);
+  tmp=tokenize(str,key);
+  out=apply(tmp,if(!isstring(#),Textformat(#,10),#));
+  out;
+);
 Colorname2cmyk(name):=( //181212
   regional(dL,code,tmp);
   dL=[
@@ -576,6 +482,67 @@ Colorname2cmyk(name):=( //181212
     println("    "+name+" not found");
     code=Assign(name); //190323
   );
+);
+Assign(str):=( //190125from
+  regional(tmp);
+  tmp=[];
+  forall(VLIST,tmp=concat(tmp,[#_1,#_2]));
+  Assign(str,tmp);
+); //190125to
+Assign(funstr,vrL):=Assign(funstr,vrL,6);
+Assign(funstr,Arg1,Arg2):=( //190813from
+  regional(vrL,precise,nn,out,tmp);
+  if(islist(Arg1),
+    vrL=Arg1; precise=Arg2;
+    nn=length(vrL)/2;
+    out=funstr;
+    forall(1..nn,
+      out=Assign(out,vrL_(2*#-1),vrL_(2*#),precise);
+    );
+  , 
+    out=Assign(funstr,Arg1,Arg2,6);
+  );
+  out;
+); //190813to
+Assign(funstr,varname,rep,precision):=(
+  regional(repstr,ii,jj,tmp,tmp1,tmp2,Notvar,Flg);
+  if(isstring(rep),repstr=rep,repstr="("+Textformat(rep,precise)+")"); //190811to
+  tmp=[46];  // 12.20
+  tmp=concat(tmp,48..57);
+  tmp=concat(tmp,65..90);
+  tmp=concat(tmp,97..122);
+  Notvar=apply(tmp,unicode(text(#),base->10));
+  tmp2="";
+  forall(1..100,
+    ii=indexof(funstr,varname);
+    if(ii>0,
+      Flg=0;
+      if(ii>1,
+        tmp=substring(funstr,ii-2,ii-1);
+        if(contains(Notvar,tmp),
+          tmp2=tmp2+substring(funstr,0,ii);
+          funstr=substring(funstr,ii,length(funstr));
+          Flg=1;
+        );
+      );
+      if(Flg==0,
+        jj=ii-1+length(varname);
+        if(jj<length(funstr),
+          tmp=substring(funstr,jj,jj+1));
+          if(contains(Notvar,tmp),
+          tmp2=tmp2+substring(funstr,0,jj);
+          funstr=substring(funstr,jj,length(funstr));
+          Flg=1;
+        );
+      );
+      if(Flg==0,
+        tmp2=tmp2+substring(funstr,0,ii-1)+repstr;
+        funstr=substring(funstr,jj,length(funstr));
+      );
+    );
+  );
+  funstr=tmp2+funstr;
+  funstr;
 );
 Colorcmyk2rgb(clr):=(
   regional(clrnew,tmp,black);
@@ -814,6 +781,10 @@ Lettermove(dir,str):=(
   );
   if(length(out)==0,out=0,out=parse(out));
   out;
+);
+Dqq(str):=DqDq(str); //18.02.11
+DqDq(str):=(
+  unicode("0022")+str+unicode("0022");
 );
 Vtickmark(arglist):=Vtickmark(arglist,[]); //190203
 Vtickmark(arglist,options):=( //190203
@@ -2185,380 +2156,6 @@ Ketcindyjsscale=1;
 
 setdirectory(Dircdy);
 
-
-
-
-
-
-
-LogData="";
-QuesDataHead="";
-QuesData="";
-QuesNo=0;
-StartTime=0;
-
-newflg=1;//開始処理が終われば0
-confirmflg=0;//確認
-quesflg=0;//出題
-scoreflg=0;//採点
-scorefin=0;//採点が１度でもすれば 1
-Scorectr=0;//採点回数のカウンタ
-recordflg=0;//記録
-quesgiven=0;//出題されているか
-quesnew=0;//出題していいか
-Msgnew=[];
-Msgques=[];
-Msgsc=[];
-
-Coorodinates(mx,my,mo,sz):=(
-  regional(tmp,tmp1,tmp2);
-  draw([XMIN,0],[XMAX,0],color->[0,0,0]);
-  draw([0,YMIN],[0,XMAX],color->[0,0,0]);
-  drawtext([XMAX,0]+mx,"$x$",size->sz,align->"right");
-  drawtext([0,YMAX]+my,"$y$",size->sz,align->"mid");
-  drawtext([0,0]+mo,"O",size->sz,align->"right");
-  tmp1=ceil(XMIN); tmp2=floor(XMAX);
-  tmp=apply(remove(tmp1..tmp2,[0]),[#,text(#)]);
-  tmp=flatten(tmp);
-  Htickmark(tmp);
-  tmp1=ceil(YMIN); tmp2=floor(YMAX);
-  tmp=apply(remove(tmp1..tmp2,[0]),[#,text(#)]);
-  tmp=flatten(tmp);
-  Vtickmark(tmp);
-);
-
-Confirmstudent(st,students):=(
-  regional(numL,nsL,nn,kk,nstr,out,tmp,tmp1);
-  numL=apply(0..9,text(#));
-  out="";
-  nsL=[];
-  forall(1..(length(students)),nn,
-    tmp1=students_nn;
-    nstr="";
-    kk=1;
-    while(kk<=length(tmp1),
-      tmp=tmp1_(kk);
-      if(contains(numL,tmp),
-        nstr=nstr+tmp;
-        kk=kk+1;
-      ,
-        kk=length(tmp1)+1;
-      );
-    );
-    nsL=append(nsL,parse(nstr));
-  );
-  nstr="";
-  kk=1;
-  while(kk<=length(st),
-    tmp=st_(kk);
-    if(contains(numL,tmp),
-      nstr=nstr+tmp;
-      kk=kk+1;
-    ,
-      kk=length(st)+1;
-    );
-  );
-  nn=parse(nstr);
-  if(contains(nsL,nn),
-    tmp=select(1..(length(nsL)),nsL_#==nn);
-    tmp=tmp_1;
-    out=students_tmp;
-  ,
-    out="";
-  );
-  out;
-);
-
-Startlearning(editno):=(
-  regional(stname);
-  stname=Textedit(editno,"noname");
-  LogData=stname+";;"+Getcurtime();
-  LogData;
-);
-
-Blink(posdata):=(
-  regional(p1,p2,q,fr);
-  p1=posdata_1; p2=posdata_2;
-  q=posdata_3*[1,1];
-  p1=p1-q; p2=p2+q;
-  fr=[p1,[p2_1,p1_2],p2,[p1_1,p2_2],p1];
-  drawpoly(fr,color->[1,0,0]);
-  p1=p1-0.2*q; p2=p2+0.2*q;
-  fr=[p1,[p2_1,p1_2],p2,[p1_1,p2_2],p1];
-  drawpoly(fr,color->[1,0,0]);
-);
-
-Newsession(editno,pos):=Newsession(editno,"",pos,18,[]);
-Newsession(editno,Arg1,Arg2):=(
-  if(islist(Arg1),
-    Newsession(editno,"",Arg1,Arg2,[]);
-  ,
-    Newsession(editno,Arg1,Arg2,18,[]);
-  );  
-);
-Newsession(editno,Arg1,Arg2,Arg3):=(
-  if(islist(Arg3),
-    Newsession(editno,"",Arg1,Arg2,18,Arg3);
-  ,
-    Newsession(editno,Arg1,Arg2,Arg3,[]);
-  );  
-);
-Newsession(editno,noinput,pos,size,studentL):=(
-  regional(st,msg,confok,ctr);
-  Posnew=pos;
-  Sizenew=size;
-  confok=0;
-  st=Textedit(editno,noinput);
-  if(length(st)==0,
-    st="";
-    msg=["ID",pos,size,[1,0,0]];
-  ,
-    if(length(studentL)>0,
-      st=Confirmstudent(st,studentL);
-      if(length(st)>0,
-        confok=1;
-      ,
-        msg=["ID?",pos,size,[1,0,0]];
-      );
-    ,
-      confok=1;
-    );
-  );
-  ctr=1;
-  while((confok==0)&(ctr<10),
-    Blink(Posid);
-    ctr=ctr+1;
-  );
-  if(confok==1,
-    Subsedit(editno,"ID="+st);
-    msg=["$\Leftarrow$",pos,size,[1,0,0]];
-    ctr=1;
-    while((confirmflg==0)&(ctr<5),
-      Blink(Poscon);
-      ctr=ctr+1;
-    );
-    if(confirmflg==1,
-      Startlearning(editno);
-      msg=["$\Rightarrow$",pos,size,[1,0,0]];
-      quesnew=1;
-      quesgiven=0;
-      newflg=0;
-    );
-  );
-  Msgnew=msg;
-  st;
-);
-
-Dispquesno(pos):=Dispquesno(pos,18,[0,0,0]);
-Dispquesno(pos,size):=Dispquesno(pos,size,[0,0,0]);
-Dispquesno(pos,size,rgb):=(
-  regional(msg);
-  msg=[Assign("N",["N",QuesNo]),pos,size,rgb];
-  msg;
-);
-
-Startquestion(question,correct):=(
-  regional(no,ex,ca,msg);
-  StartTime=Counttime();
-  QuesNo=QuesNo+1; //210424
-  Msgnew=Dispquesno(Posnew,Sizenew,[0,0,0]);
-  Msgsc=[];
-  no=text(QuesNo);
-  Scorectr=1;
-  ex=question;
-  if(!isstring(ex),ex=text(ex));
-  ca=correct;
-  if(!isstring(ca),ca=text(ex));
-  QuesDataHead=no+";;"+ex+";;"+ca;
-  quesgiven=1;
-  graphflg=0;
-  quesnew=0;
-  scorefin=0;
-  QuesDataHead;
-);
-
-Makequesdata(stans,stscore):=(
-  regional(ans,score,tm);
-  ans=stans;
-  if(!isstring(ans),ans=text(ans));
-  score=stscore;
-  if(!isstring(score),score=text(score));
-  QuesData=QuesDataHead+";;"+ans+";;"+score;
-  tm=Counttime()-StartTime;
-  QuesData=QuesData+";;"+text(tm);
-  if(Scorectr>0,
-    QuesData=QuesData+";;"+text(Scorectr);
-  );
-  quesnew=1;
-  scorefin=1;
-  Scorectr=Scorectr+1;
-  QuesData;
-);
-
-Endquestion(studentans,studentscore):=(
-  regional(ans,score,tm);
-  if(EndQues==0,
-    ans=studentans;
-    if(!isstring(ans),ans=text(ans));
-    score=studentscore;
-    if(!isstring(score),score=text(score));
-    QuesData=QuesData+";;"+ans+";;"+score;
-    tm=Counttime()-StartTime;
-    QuesData=QuesData+";;"+text(tm);
-    EndQues=1;
-  );
-);
-
-Updatelog():=(
-  regional(tmp,tmp1,tmp2);
-  if(length(QuesData)>0,
-    tmp=tokenize(LogData,"||");
-    if(length(tmp)>1,
-      tmp1=tmp_(-1);
-      tmp2=tmp_(1..(length(tmp)-1));
-      tmp=tokenize(tmp1,";;");
-      tmp=tmp_1;
-      if(tmp==QuesNo, //210425a
-        LogData=tmp2_1;
-        forall(2..(length(tmp2)),
-          LogData=LogData+"||"+tmp2_#;
-        );
-      );
-    );
-    LogData=LogData+"||"+QuesData;
-  );
-  LogData;
-);
-
-Displetters(msgLorg):=(
-  regional(msgL,pos,str,size,color);
-  msgL=msgLorg;
-  if(length(msgL)>0,
-    if(isstring(msgL_1),msgL=[msgL]);
-    forall(msgL,
-      pos=#_2;
-      str=#_1;
-      if(length(#)>2,size=#_3,size=16);
-      if(length(#)>3,color=#_4,color=[0,0,0]); 
-      drawtext(pos,str,size->size,color->color);
-    );
-  );
-);
-
-Dispexprs(msgLorg):=(
-  regional(msgL,pos,str,size,color);
-  msgL=msgLorg;
-  if(length(msgL)>0,
-    if(isstring(msgL_1),msgL=[msgL]);
-    forall(msgL,
-      pos=#_2;
-      str="$"+#_1+"$";
-      if(length(#)>2,size=#_3,size=16);
-      if(length(#)>3,color=#_4,color=[0,0,0]);    
-      drawtext(pos,str,size->size,color->color);
-    );
-  );
-);
-
-Displetterlist(list):=(
-  forall(list,
-    Displetters(#);
-  );
-);
-
-Dispexprlist(list):=(
-  forall(list,
-    Dispexprs(#);
-  );
-);
-
-Getcurtime():=Getcurtime(date(),time());
-Getcurtime(ymd,hms):=(
-  regional(out,tmp,tmp1);
-  out=text(ymd_1*10000+ymd_2*100+ymd_3);
-  tmp=text(hms_1*3600+hms_2*60+hms_3);
-  tmp1=substring("0000000",0,5-length(tmp));
-  out=out+tmp1+tmp;
-  out;
-);
-
-Counttime():=(
-  regional(tmp,tmp1);
-  tmp=time();
-  tmp_1*3600+tmp_2*60+tmp_3;
-);
-
-Returndatetime(data):=(
-  regional(dstr,dt,tm,tmp);
-  dstr=text(data);
-  dt=substring(dstr,0,8);
-  tmp=substring(dstr,8,length(dstr));
-  tm=Returntime(tmp);
-  [dt,tm];
-);
-
-Returntime(timedata):=(
-  regional(tmp,tmp1,out);
-  tmp=timedata;
-  if(isstring(tmp),tmp=parse(tmp));
-  out=[floor(tmp/3600)];
-  tmp=mod(tmp,3600);
-  out=append(out,floor(tmp/60));
-  tmp=mod(tmp,60);
-  tmp1=append(out,tmp);
-  out="";
-  forall(tmp1,
-    out=out+text(#)+":";
-  );
-  out=substring(out,0,length(out)-1);
-  out;
-);
-
-Log2csv(dt):=(
-  regional(cL,dL,out,nn,tmp,tmp1,tmp2);
-  cL=[];
-  dL=tokenize(dt,"||");
-  tmp=dL_1;
-  tmp1=tokenize(tmp,";;");
-  tmp=Returndatetime(tmp1_2);
-  out=tmp1_1+","+tmp_1+","+tmp_2;
-  forall(2..(length(dL)),nn,
-    tmp1=tokenize(dL_nn,";;");
-    tmp2=text(tmp1_1)+",";
-    forall(2..(length(tmp1)),
-      tmp=tmp1_#;
-      if(!isstring(tmp),tmp=text(tmp));
-      if(indexof(tmp,",")>0,tmp=Dqq(tmp));
-      tmp2=tmp2+tmp;
-      if(#<length(tmp1),tmp2=tmp2+",");
-    );
-    out=out+","+tmp2;
-  );
-  out;
-);
-
-Csvtext():=Csvtext("alltext");
-Csvtext(fname):=(
-  regional(tmp,tmp1,tL,numL,tnL,fid);
-  tmp=allelements();
-  tmp1=allpoints();
-  tL=remove(tmp,tmp1);
-  numL=apply(tL,replace(#.name,"Text",""));
-  numL=apply(numL,replace(#,"''",".2"));
-  numL=apply(numL,replace(#,"'",".1"));
-  numL=apply(numL,if(length(#)==0,"-1",#));
-  numL=apply(numL,parse(#));
-  tnL=apply(1..(length(numL)),
-     [numL_#,inspect(tL_#,"name"),inspect(tL_#,"text.text")]);
-  tnL=sort(tnL,[#_1]);
-  fid=openfile(fname+".csv");
-  forall(tnL,
-   println(fid,#_1+","+#_2+","+#_3);
-  );
-  closefile(fid);
-  println("generate "+fname+".csv");
-);
-
 Id=60;
 Rec=50;
 
@@ -2609,13 +2206,13 @@ var cdy = CindyJS({
   geometry: [
     {name: "SW", type: "Free", pos: [-3.3333333333333335, -4.0, 3.3333333333333335], color: [1.0,1.0,1.0], labeled: false, size: 2.0, border:false },
     {name: "NE", type: "Free", pos: [4.0, 1.40722048090205, 1.2196896793250578], color: [1.0,1.0,1.0], labeled: false, size: 2.0, border:false },
-    {name: "A", type: "Free", pos: [-0.56, 0.703724390664, 4.0], color: [1.0, 0.0, 0.0], labeled: false, size: 5.1, border: true }
+    {name: "A", type: "Free", pos: [0.44, 2.79836, 4.0], color: [1.0, 0.0, 0.0], labeled: false, size: 5.1, border: true }
   ],
   ports: [{
     id: "CSCanvas",
     width: 933,
-    height: 586,
-    transform: [{visibleRect: [-1.4318579138815968, 1.5944166282129342, 3.707742086118403, -1.6336708315941397]}],
+    height: 570,
+    transform: [{visibleRect: [-1.429502893890675, 1.5892546623794213, 3.7100971061093246, -1.550693890675241]}],
     grid: 0.1,
     background: "rgb(247,247,247)"
   }],
