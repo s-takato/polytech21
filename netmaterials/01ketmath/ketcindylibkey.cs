@@ -16,6 +16,7 @@
 
 println("ketcindylibkey[20210629 loaded");
 
+// 210706 Modifyfortex changed (\, removed)
 // 210629 Addasterisk debugged ( for e^ )
 //              Keytable changed
 // 210615 Keytalble changed ( name added )
@@ -40,8 +41,8 @@ Modifyfortex(str):=(
   regional(rep1L,rep2L,nn,tmp,tmp1,out);
   rep1L=["(sp)","(cross)","(cdot)","(deg)","(circ)","(neq)",
          "(geq)","(leq)","(pm)","(mp)","(inf)"];
-  rep2L=["\;","{\times}\,","{\cdot}\,","^{\circ}\,","\circ\,","{\neq}\,",
-         "{\geq}\,","{\leq}\,","{\pm}\,","{\mp}\,","{\infty}\,"];
+  rep2L=["\;","{\times}","{\cdot}","^{\circ}","\circ","{\neq}",
+         "{\geq}","{\leq}","{\pm}","{\mp}","{\infty}"];
   out=str;
   forall(1..(length(rep1L)),nn,
     out=replace(out,rep1L_nn,rep2L_nn);

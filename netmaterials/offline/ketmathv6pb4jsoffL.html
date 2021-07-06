@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     
-    <title>ketmathv6pb2.cdy</title>
+    <title>ketmathv6pb4.cdy</title>
     <style type="text/css">
         * {
             margin: 0px;
@@ -120,7 +120,7 @@ Addasterisk(strorg):=(
   sgnL=["-","+"];
   forall(funL,f,
     str="";
-    res=str0;
+    res=str0; res2="";
     ctr=1;
     while((indexof(res,f)>0)&(ctr<100),
       tmp1=indexof(res,f);
@@ -2819,7 +2819,7 @@ Ketcindyjsscale=1;
 
 setdirectory(Dircdy);
 
-println("ketcindylibkey[20210612] loaded");
+println("ketcindylibkey[20210629 loaded");
 
 
 ch=0;
@@ -2837,8 +2837,8 @@ Modifyfortex(str):=(
   regional(rep1L,rep2L,nn,tmp,tmp1,out);
   rep1L=["(sp)","(cross)","(cdot)","(deg)","(circ)","(neq)",
          "(geq)","(leq)","(pm)","(mp)","(inf)"];
-  rep2L=["\;","{\times}\,","{\cdot}\,","^{\circ}\,","\circ\,","{\neq}\,",
-         "{\geq}\,","{\leq}\,","{\pm}\,","{\mp}\,","{\infty}\,"];
+  rep2L=["\;","{\times}","{\cdot}","^{\circ}","\circ","{\neq}",
+         "{\geq}","{\leq}","{\pm}","{\mp}","{\infty}"];
   out=str;
   forall(1..(length(rep1L)),nn,
     out=replace(out,rep1L_nn,rep2L_nn);
@@ -3226,14 +3226,10 @@ Gettexform(str):=(
       strt=strt+substring(#,1,length(#));
     ,
       tmp=#;
-Drwletter([5,14],text([3229,tmp]),15);
       tmp=replace(#," ","(sp)");
       tmp=Modifyfortex(tmp);
-Drwletter([5,12],text([3232,tmp]),15);
       tmp=Morefunction(tmp);
-Drwletter([5,10],text([3234,tmp]),15);
       tmp=Addasterisk(tmp);
-Drwletter([5,8],text([3236,tmp]),15);
       tmp=replace(tmp,"\exp(","e^(");
       tmp1=Totexform(tmp);
       tmp1=replace(tmp1,"a r r a y","array"); //210606[2lines]
@@ -3553,7 +3549,6 @@ forall(1..nch,nc,
   );
   tp=tpL_nc;
   dy=dyL_nc;
-sL=["\sin^(2)x"];
   ns=length(sL);
   forall(1..ns,nn,
     strt=Gettexform(sL_nn);
@@ -3690,8 +3685,8 @@ var cdy = CindyJS({
   ports: [{
     id: "CSCanvas",
     width: 1000,
-    height: 462,
-    transform: [{visibleRect: [-23.92007760796149, 21.21566337548241, 69.3355855809722, -21.868453017804946]}],
+    height: 461,
+    transform: [{visibleRect: [-23.92007760796149, 21.21566337548241, 69.3355855809722, -21.77519735461601]}],
     grid: 5.0,
     background: "rgb(247,247,247)"
   }],

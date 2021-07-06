@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     
-    <title>ketmathv6pb3.cdy</title>
+    <title>ketmathv6pb4.cdy</title>
     <style type="text/css">
         * {
             margin: 0px;
@@ -2837,8 +2837,8 @@ Modifyfortex(str):=(
   regional(rep1L,rep2L,nn,tmp,tmp1,out);
   rep1L=["(sp)","(cross)","(cdot)","(deg)","(circ)","(neq)",
          "(geq)","(leq)","(pm)","(mp)","(inf)"];
-  rep2L=["\;","{\times}\,","{\cdot}\,","^{\circ}\,","\circ\,","{\neq}\,",
-         "{\geq}\,","{\leq}\,","{\pm}\,","{\mp}\,","{\infty}\,"];
+  rep2L=["\;","{\times}","{\cdot}","^{\circ}","\circ","{\neq}",
+         "{\geq}","{\leq}","{\pm}","{\mp}","{\infty}"];
   out=str;
   forall(1..(length(rep1L)),nn,
     out=replace(out,rep1L_nn,rep2L_nn);
@@ -3685,8 +3685,8 @@ var cdy = CindyJS({
   ports: [{
     id: "CSCanvas",
     width: 1000,
-    height: 430,
-    transform: [{visibleRect: [-23.92007760796149, 21.21566337548241, 69.3355855809722, -18.88427179575907]}],
+    height: 461,
+    transform: [{visibleRect: [-23.92007760796149, 21.21566337548241, 69.3355855809722, -21.77519735461601]}],
     grid: 5.0,
     background: "rgb(247,247,247)"
   }],
