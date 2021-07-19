@@ -14,7 +14,16 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>
 //
 
-println("ketcindylibforjs[20210518] loaded");
+println("ketcindylibkey[20210629 loaded");
+
+// 210706 Modifyfortex changed (\, removed)
+// 210629 Addasterisk debugged ( for e^ )
+//              Keytable changed
+// 210615 Keytalble changed ( name added )
+// 210612 Replacefun debugged
+// 210606 Replacematdet,Extractvar added
+// 210604 Replacefun, Morefunctions added
+//              Modifyfortex changed ( (inf) added )
 // 210515 start
 
 ch=0;
@@ -30,14 +39,157 @@ npos=0;
 
 Modifyfortex(str):=(
   regional(rep1L,rep2L,nn,tmp,tmp1,out);
-  rep1L=["(sp)","(cross)","(cdot)","(deg)","(neq)",
-         "(geq)","(leq)","(pm)","(mp)"];
-  rep2L=["\;","\times ","\cdot ","^{\circ} ","\neq ",
-         "\geq ","\leq ","\pm ","\mp "];
+  rep1L=["(sp)","(cross)","(cdot)","(deg)","(circ)","(neq)",
+         "(geq)","(leq)","(pm)","(mp)","(inf)"];
+  rep2L=["\;","{\times}","{\cdot}","^{\circ}","\circ","{\neq}",
+         "{\geq}","{\leq}","{\pm}","{\mp}","{\infty}"];
   out=str;
   forall(1..(length(rep1L)),nn,
     out=replace(out,rep1L_nn,rep2L_nn);
   );
+  out;
+);
+
+Extractvar(strorg):=Extractvar(strorg,",");
+Extractvar(strorg,mark):=(
+  regional(out,parL,str,cma,nc,first,last,
+     tmp,tmp1,tmp2);
+  str=strorg;
+  out=[];
+  first=0; last=0;
+  parL=Bracket(str,"()");
+  tmp1=select(parL,#_2==1);
+  tmp2=select(parL,#_2==-1);
+  if(length(tmp1)*length(tmp2)>0,
+    first=tmp1_1_1;
+    last=tmp2_1_1;
+    str=substring(str,0,last);
+    cma=Indexall(str,mark);
+    parL=select(parL,#_1<=last);
+    if(length(cma)==0,
+      out=[substring(str,first,last-1)];
+    ,
+      tmp1=first;
+      forall(1..(length(cma)),nc,
+        tmp=select(parL,#_1<cma_nc);
+        tmp=tmp_(-1)_2;
+        if(tmp>0,tmp=tmp,tmp=-tmp-1);
+        if(tmp==1,
+          tmp2=cma_(nc)-1;
+          out=append(out,substring(str,tmp1,tmp2));
+          tmp1=tmp2+1;
+          if(nc==length(cma),
+            out=append(out,substring(str,tmp1,length(str)-1));
+          );
+        );
+      );
+    );
+  );
+  [first,last,out];
+);
+
+Replacematdet(str):=(
+  regional(sym,out,rest,ctr,eL,np,nc,tmp,tmp1,tmp2,tmp3);
+  out=str;
+  forall(["mat(","det("],sym,
+    tmp=indexof(out,sym);
+    ctr=0;
+    while((tmp>0)&(ctr<20),
+      rest=substring(out,tmp-1,length(out));
+      out=substring(out,0,tmp-1);
+      tmp1=Bracket(rest,"()");
+      tmp1=select(tmp1,#_2==-1);
+      if(length(tmp1)>0,tmp1=tmp1_1_1,tmp1=length(rest));
+      tmp2=substring(rest,0,tmp1);
+      rest=substring(rest,tmp1,length(rest));
+      eL=Extractvar(tmp2,";");
+      tmp3=eL_3;
+      forall(1..(length(tmp3)),np,
+        tmp=tmp3_np;
+        tmp1=Getlevel(tmp);
+        tmp1=select(tmp1,#_2==0);
+        tmp1=apply(tmp1,#_1);
+        nc=length(tmp1)+1;
+        forall(tmp1,
+          tmp_#="&";
+        );
+        tmp3_np=tmp;
+      );
+      tmp2="\begin{array}{";
+      forall(1..nc,tmp2=tmp2+"c");
+      tmp2=tmp2+"}";
+      forall(tmp3,tmp2=tmp2+#+"\\");
+      tmp2=substring(tmp2,0,length(tmp2)-2);
+      tmp2=tmp2+"\end{array}";
+      if(sym=="mat(",
+        tmp2="\left("+tmp2+"\right)";
+      );
+      if(sym=="det(",
+        tmp2="\left|"+tmp2+"\right|";
+      );
+      out=out+tmp2+rest;
+      tmp=indexof(out,sym);
+      ctr=ctr+1;      
+    );
+  );
+  out;
+);
+
+Replacefun(str,name,repL):=(  //new 210604
+  regional(out,sub,rest,pre,post,comL,ctr,lev,nn,
+     tmp,tmp1,tmp2);
+  out="";
+  pre=""; post=str; sub="";
+  tmp=indexof(post,name);
+  ctr=1;
+  while((tmp>0)&(ctr<50),
+    pre=substring(post,0,tmp-1);
+    sub=substring(post,tmp+length(name)-2,length(post));
+    tmp1=Bracket(sub,"()");
+    tmp1=select(tmp1,#_2==-1);
+    tmp1=tmp1_1_1;
+    post=substring(sub,tmp1,length(sub));
+    sub=substring(sub,0,tmp1);
+    tmp1=Bracket(sub,"()");
+    tmp2=Getlevel(sub,",");
+    if(length(tmp2)==0,
+      if(name=="int(",
+        pre=pre+"\displaystyle\int\,";
+      );
+    ,
+      tmp2=select(tmp2,#_2==1);
+      tmp2=apply(tmp2,#_1);
+      tmp2=prepend(1,tmp2);
+      tmp2=append(tmp2,length(sub));
+      if(length(tmp2)==length(repL),
+        forall(1..(length(tmp2)-1),
+          tmp=substring(sub,tmp2_#,tmp2_(#+1)-1);
+          if(!contains(["e^("],name),
+            if(indexof(tmp,"-")+indexof(tmp,"+")>0,tmp="("+tmp+")");
+          );
+          pre=pre+repL_#+tmp;
+//        if(#<length(tmp2)-1,pre=pre+","); //210617removed
+        );
+        pre=pre+repL_(length(tmp2));
+      );
+    );
+    out=out+pre;
+    tmp=indexof(post,name);
+    ctr=ctr+1;
+  );
+  out=out+post;
+  out;
+);
+
+Morefunction(str):=( //new 210604
+  regional(out,name,repL);
+  out=str;
+  out=Replacefun(out,"tfr(",["\tfrac{","}{","}"]);
+  out=Replacefun(out,"lim(",["\displaystyle\lim_{","\to\,","}"]); //210617from
+  out=Replacefun(out,"int(",["\displaystyle\int_{","}^{","}"]);
+  out=Replacefun(out,"sum(",["\displaystyle\sum_{","}^{","}"]); //210617to
+//  out=Replacefun(out,"e^(",["\exp{","}"]); //210612
+  out=Replacematdet(out); //210606
   out;
 );
 
@@ -289,8 +441,12 @@ Gettexform(str):=(
       tmp=#;
       tmp=replace(#," ","(sp)");
       tmp=Modifyfortex(tmp);
+      tmp=Morefunction(tmp);
       tmp=Addasterisk(tmp);
+      tmp=replace(tmp,"\exp(","e^(");
       tmp1=Totexform(tmp);
+      tmp1=replace(tmp1,"a r r a y","array"); //210606[2lines]
+      repeat(5,tmp1=replace(tmp1,"c c","cc"));
       tmp1=replace(tmp1,"c i r c","\circ");
       tmp1=replace(tmp1,"\frac","\dfrac");
       tmp1=Greekletter(tmp1); //210514[3lines]
@@ -302,27 +458,22 @@ Gettexform(str):=(
   strt;
 );
 
-Dispposition(posline,npos,str):=(
-  regional(tmp,tmp1,tmp2,dp,p1,p2);
-  dp=[0,1];
-  p1=posline+dp;  p2=posline-dp;
-  Listplot("disp1",[p1,p2],["Color=blue"]);
-  tmp=[0.2,0];
-  p1=posline+dp+tmp;  p2=posline-dp+tmp;
-  Listplot("disp1",[p1,p2],["Color=blue"]);
+Dispposition(pos,npos,str):=(
+  regional(tmp,tmp1,tmp2,dp,p1,p2,p3,p4);
+  dp=[0,3];
+  tmp=[0.1,0];
+  p1=pos-tmp;  p2=pos+tmp;
+  p3=p1+dp; p4=p2+dp;
+  Listplot("-disp",[p1,p2,p4,p3,p1],["nodisp","Msg=n"]);
+  Shade(["disp"],["Color=red"]);
   if(length(str)>0,
-    if(npos==0,tmp1="";tmp2=str_1);
-    if(npos>0,
-      tmp1=str_(npos); tmp2="";
-      if(npos<length(str),
-        tmp2=str_(npos+1);
-      );
-    );
-    dp=0.5*dp;
-    p1=posline-dp-[1.1,0];
-    p2=posline-dp+[0.5,0];
-    Drwletter(p1,tmp1,24);
-    Drwletter(p2,tmp2,24);
+    tmp=max([0,npos-4]);
+    tmp1=substring(str,tmp,npos);
+    tmp=min([length(str),npos+4]);
+    tmp2=substring(str,npos,tmp);
+    p1=pos+1/3*dp;
+    drawtext(p1,tmp1,size->24,align->"right");
+    drawtext(p1,tmp2,size->24,align->"left");
   );
 );
 
@@ -337,56 +488,29 @@ Addfunstr(name,npos,strnow):=(
   out;
 );
 
-Displetters(msgLorg):=(
-  regional(msgL,pos,str,size,color);
-  msgL=msgLorg;
-  if(length(msgL)>0,
-    if(isstring(msgL_1),msgL=[msgL]);
-    forall(msgL,
-      pos=#_2;
-      str=#_1;
-      if(length(#)>2,size=#_3,size=16);
-      if(length(#)>3,color=#_4,color=[0,0,0]); 
-      drawtext(pos,str,size->size,color->color);
-    );
-  );
-);
-
-Dispexprs(msgLorg):=(
-  regional(msgL,pos,str,size,color);
-  msgL=msgLorg;
-  if(length(msgL)>0,
-    if(isstring(msgL_1),msgL=[msgL]);
-    forall(msgL,
-      pos=#_2;
-      str="$"+#_1+"$";
-      if(length(#)>2,size=#_3,size=16);
-      if(length(#)>3,color=#_4,color=[0,0,0]);    
-      drawtext(pos,str,size->size,color->color);
-    );
-  );
-);
-
-Displetterlist(list):=(
-  forall(list,
-    Displetters(#);
-  );
-);
-
-Dispexprlist(list):=(
-  forall(list,
-    Dispexprs(#);
-  );
-);
-
-Keytable(nx,dx,ny,dy,plb,clr):=(
-  regional(xL,yL,plt,prt,prb);
-  xL=apply(0..nx,#/10*dx);
-  yL=apply(0..ny,#/10*dy);
-  plt=plb+[0,yL_(-1)]; prt=plt+[xL_(-1),0]; prb=prt-[0,yL_(-1)];
+Keytable(nx,dx,ny,dy,plb,clr):=Keytable(nx,dx,ny,dy,plb,clr,[],0,22); //210629
+Keytable(nx,dx,ny,dy,plb,clr,nameL,nmove,sz):=(
+  regional(xL,yL,plt,prt,prb,row,col,name,tmp1,tmp2,pos);
+  xL=apply(0..nx,#/10*dx+plb_1);
+  yL=apply(0..ny,(ny-#)/10*dy+plb_2);
+  plt=[xL_1,yL_1]; prt=[xL_(-1),yL_1]; prb=[xL_(-1),yL_(-1)];
   fillpoly([plb,plt,prt,prb,plb],color->clr);
-  forall(xL,draw([plb_1+#,plb_2],[plb_1+#,plt_2],color->[0,0,0]));
-  forall(yL,draw([plb_1,plb_2+#],[prb_1,plb_2+#],color->[0,0,0]));
+  forall(xL,draw([#,plb_2],[#,plt_2],color->[0,0,0]));
+  forall(yL,draw([plb_1,#],[prb_1,#],color->[0,0,0]));
+  if(length(nameL)>0,
+    forall(1..(length(yL)-1),row,
+      tmp1=yL_row;
+      tmp2=yL_(row+1);
+      pos=[0,(tmp1+tmp2)/2];
+      forall(1..(length(xL)-1),col,
+        name=nameL_row_col;
+        tmp1=xL_col;
+        tmp2=xL_(col+1);
+        pos_1=(tmp1+tmp2)/2;
+        drawtext(pos+nmove,name,align->"mid",size->sz);
+      );
+    );
+  );
 );
 
 Allclear():=(
@@ -397,7 +521,7 @@ Allclear():=(
   funflg=0;
 );
 
-Delete():=(
+Deletekey():=(
   regional(tmp1,tmp2);
   if(npos>0,
     tmp1=substring(strnow,0,npos-1);
@@ -479,17 +603,16 @@ Alltextkey(make):=( //no ketjs on
 Setkeystyle():=Setkeystyle("keylist");  //no ketjs on
 Setkeystyle(fname):=(
 //help:Setkeystyle();
-  regional(keyL,button,sep,key,tmp);
+  regional(keyL,button,key,tmp);
   println(fname+".csv");
   if(!isexists(Dircdy,fname+".csv"),
     println("  File not found");
   ,
     Setdirectory(Dircdy);
     keyL=Readlines(Dircdy,fname+".csv");
-    button=Readlines(Dircdy,fname+"b.txt");
+    button=Readlines(Dircdy,fname+"b.txt");    
     forall(keyL,
-      if(indexof(#,";")>0,sep=";",sep=",");
-      key=Strsplit(#,sep);
+      key=Strsplit(#,",");
       tmp=substring(key_3,1,length(key_3)-1);
       inspect(parse(key_2),"text.text",tmp);
       inspect(parse(key_2),"textsize",key_4);
