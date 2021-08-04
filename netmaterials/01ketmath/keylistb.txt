@@ -178,6 +178,8 @@ Text96
 funflg=1;name="/";
 Text97
 funflg=1;if(Shift==0,name="(inf)");if(Shift==1,name="(circ)");
+Text100
+npos=1;
 Text101
 funflg=1;Delete();
 Text102
