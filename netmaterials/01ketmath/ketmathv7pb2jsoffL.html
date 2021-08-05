@@ -297,6 +297,7 @@ Totexform(str):=( //210803from[renew]
   regional(plv,funL,repL,out,head,flg,rep,fun,pre,post,ctr,clv,nn,
       tmp,tmp1,tmp2,tmp3,tmp4);
   repL=[ //190515from
+    ["^(",["^{xx}"]], //210805
     ["fr(",["","\frac{xx}{yy}"]], //210228from
     ["log(",["\log xx ","\log_{xx} yy"]], //210405
     ["sq(",["\sqrt{xx}","\sqrt[xx]{yy}"]],
@@ -3491,7 +3492,7 @@ var cdy = CindyJS({
   geometry: [
     {name: "Text1", type: "EditableText", pos: [3.817258883248731, -4.0, -0.23585695636186368], color: [0.0, 0.0, 0.0], fillcolor: [1.0, 1.0, 1.0], fillalpha: 1.0, minwidth: 850, textsize: 24.0},
     {name: "SW", type: "Free", pos: [4.0, 3.3849094889123466, -0.20065303812093022], color: [1.0,1.0,1.0], labeled: false, size: 2.0, border:false },
-    {name: "T2", type: "Free", pos: [4.0, -2.7999999999999994, -0.26666666666666666], color: [1.0, 0.784, 0.0], labeled: false, size: 3.0, border: true },
+    {name: "T2", type: "Free", pos: [4.0, -2.8, -0.26666666666666666], color: [1.0, 0.784, 0.0], labeled: false, size: 3.0, border: true },
     {name: "T3", type: "Free", pos: [4.0, -1.8666666666666667, -0.26666666666666666], color: [0.0, 0.0, 0.0], labeled: false, size: 3.0, border: true },
     {name: "T4", type: "Free", pos: [4.0, -0.9333333333333333, -0.26666666666666666], color: [1.0, 0.784, 0.0], labeled: false, size: 3.0, border: true },
     {name: "NE", type: "Free", pos: [4.0, 0.921883843038398, 0.06097159718654641], color: [1.0,1.0,1.0], labeled: false, size: 2.0, border:false },
@@ -3598,8 +3599,8 @@ var cdy = CindyJS({
   ports: [{
     id: "CSCanvas",
     width: 1009,
-    height: 466,
-    transform: [{visibleRect: [-23.92007760796149, 21.21566337548241, 70.17488654967259, -22.241475670560682]}],
+    height: 450,
+    transform: [{visibleRect: [-23.92007760796149, 21.21566337548241, 70.17488654967259, -20.749385059537744]}],
     grid: 5.0,
     background: "rgb(247,247,247)"
   }],
