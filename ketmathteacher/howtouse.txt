@@ -62,18 +62,18 @@ layer::{120}{0}
 end
 
 enumerate::[(1)]
-item::\verb|ketgcdata.cdf|を立ち上げる．
-item::CindyScriptでstudentsに\\
-学生リスト名を割り当てる．
+item::学生リストのファイル\\
+(student...)があるかを確認する\vspace{-1mm}
+item::\verb|ketgcdata.cdy|を立ち上げる\vspace{-1mm}
 item::カーソルで枠を選びクリック\\
-ファイルhead(例えば07124)\\
-が表示される，
+ファイルhead(以下 07124)\\
+が表示される\vspace{-1mm}
 item::\verb|Mkdata, Makecsv, Cmtdata|を順に押す\\
-　\Ltab{30mm}{all07124.csv}学生名や回答のデータを入れた一覧表(タブ区切り)\\
-　\Ltab{30mm}{sta07124.txt}すべてのデータを１行にしたファイル\\
-　\Ltab{30mm}{}　採点コメントを追加するketmath.htmlで必要\\
-　\Ltab{30mm}{cmt.r}採点コメントを入れた１行データをタブ区切りに直す\\
-　\Ltab{30mm}{fig/kc...}cmt.rを実行するバッチファイル(cmt0724.csvを作成)
+　\Ltab{35mm}{ans07124.csv}学生名や回答のデータを入れた一覧表(タブ区切り)\\
+　\Ltab{35mm}{ansline07124.txt}すべてのデータを１行にしたファイル\\
+　\Ltab{35mm}{}（採点コメントを追加するketmath.htmlで必要）\\
+　\Ltab{35mm}{cmt.r}採点コメントを入れた１行データをタブ区切りに直す\\
+　\Ltab{35mm}{kc07124...}cmt.rを実行するバッチ(record0724.csvを作成)
 end
 
 %%%%%%%%%%%%%
@@ -88,14 +88,13 @@ layer::{120}{0}
 end
 
 enumerate::[(1)]
-item::ketmathtoffL.htmlを立ち上げる．\vspace{-1mm}
-item::sta07124.txtのすべてを選択して\\
-コピー，最下段の入力窓に入れる．\vspace{-1mm}
+item::ketmathtoffL.htmlを立ち上げる．\vspace{-0.5mm}
+item::ansline07124.txtのすべてを選択\\
+コピーして最下段の入力窓に入れる．\vspace{-0.5mm}
 %[2,-]::item::＜＞で学生番号を変えて得点(Sc) \\
-%[2,-]::とコメント(2段目)を追加する．\vspace{-1mm}
-%[3,-]::item::recボタンを押すと最下段にすべてのデータ(1行)が入る．\vspace{-1mm}
-%[4,-]::item::コピーしてsta07124.txtの2行目にコピーして保存する．\vspace{-1mm}
-%[4,-]::item::fig/kc...をダブルクリックするとcmt07124.csv(タブ区切り)ができる．\\
-%[4,-]::　注) kc...を書き換えてしまったときは，ketgcdata.cdyを立ち上げて，\\
-%[4,-]::\phantom{　注)}ファイルを選んでcmtdataボタンを押す．
+%[2,-]::とコメント(2段目)を追加する．\vspace{-0.5mm}
+%[3,-]::item::Recボタンを押すと最下段にすべてのデータ(1行形式)が入る．\vspace{-0.5mm}
+%[4,-]::item::すべてを選択してコピーする．\vspace{-0.5mm}
+%[4,-]::item::ansline07124.txtの2行目にコピーして保存する．\vspace{-0.5mm}
+%[4,-]::item::kc0712...をダブルクリックするとrecord07124.csv(タブ区切り)ができる．
 end
