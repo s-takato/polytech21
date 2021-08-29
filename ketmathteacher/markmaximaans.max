@@ -1,0 +1,11 @@
+writefile("/polytech21.git/ketmathteacher/markmaximaans.txt")$/*##*/
+powerdisp:false$/*##*/
+display2d:false$/*##*/
+linel:1000$/*##*/
+ca:(1)/(4)*x^4-(5)/(3)*x^3+x+C$/*##*/
+saL:[___,___,___,___,___,___,___,___,___,___,___,___,___,___,___,___,___,___,___,___,___]$/*##*/
+gr:[]$/*##*/
+for k:1 thru 21 do block(      sa:saL[k],      gr:endcons(ratsimp(sa-ca,x),gr)    )$/*##*/
+disp(gr)$/*##*/
+closefile()$/*##*/
+quit()$/*##*/
