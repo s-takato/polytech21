@@ -1,0 +1,33 @@
+Text1
+Viewtex();
+kc();
+Text2
+if(length(Shellparent)>0,
+  Makeshell(),Makebat();
+);
+if(indexof(Libname,"sci")>0,
+  writetosci(2),writetoRS(2)
+);
+kc();
+Text3
+Parafolder();
+Text4
+Mkanimation();
+Text5
+Mkflipanime();
+Text6
+quesflg=1;
+Text7
+confirmflg=1;
+Text8
+recordflg=1;
+Text12
+scoreflg=1;
+Text21
+Mkketcindyjs(append(KETJSOP,"Web=y"));
+Text22
+Mkketcindyjs(append(KETJSOP,"Web=n"));
+Text50
+
+Text60
+
