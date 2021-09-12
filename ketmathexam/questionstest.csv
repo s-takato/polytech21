@@ -1,6 +1,0 @@
-Q 次の不定積分を求めよ．				
-[1] int()(2x+3)dx	[1] int()(x+3)dx	[1] int()(2x+1)dx	[1] int()(2x+4)dx	[1] int()(x-2)dx
-[2] int()(x+1)^2dx	[2] int()(x+2)^2dx	[2] int()(x-1)^2dx	[2] int()(x-2)^2dx	[2] int()(x+3)^2dx
-Q 次の不定積分を求めよ．				
-[1] int()(sin(x)+3cos(x))dx	[1] int()(2sin(x)+cos(x))dx	[1] int()(3sin(x)-cos(x))dx	[1] int()(3sin(x)-2cos(x))dx	[1] int()(-sin(x)+3cos(x))dx
-[2] int()(2e^x+fr(1,x))dx	[2] int()(e^x+fr(3,x))dx	[2] int()(2e^x+fr(3,x))dx	[2] int()(2e^x+fr(4,x))dx	[2] int()(e^x-fr(1,x))dx
