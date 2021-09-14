@@ -8,10 +8,10 @@ greflg=0;
 boldflg=0;
 vecflg=0;
 
-nch=2;
+nch=3;
 ch=2;
-posyL=[18,-3];
-px=-15;
+posyL=[18,-3,-20];
+px=-17;
 nt=4;
 tposL=apply(1..nt,[px,12-3.5*(#-1)]);
 
@@ -20,7 +20,7 @@ tposL=apply(1..nt,[px,12-3.5*(#-1)]);
  // no ketjs on 
 Seteditable(1,["","Size=24","Width=850"]);
 Seteditable(2,["","Size=24","Width=850"]);
-Seteditable(3,["Student=","Size=24","Width=700"]);
+Seteditable(3,["Student=","Size=24","Width=600"]);
 Seteditable(10,["","Size=18","Width=50"]);
 Seteditable(32,["問=","Size=18","Width=80"]);
 // no ketjs off
